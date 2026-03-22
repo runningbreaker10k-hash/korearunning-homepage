@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>조직도 - 전국러닝협회</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#c0392b',
+            'primary-dark': '#922b21',
+          },
+          fontFamily: { sans: ['Noto Sans KR', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    .org-line-v  { display:none; }
+    .org-line-h  { display:none; }
+  </style>
+</head>
+<body class="font-sans bg-white text-gray-900 antialiased">
+
+  <!-- HEADER -->
+  <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="bg-gray-900 text-gray-400 text-xs py-1.5 px-4 hidden md:block">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <span><i class="fas fa-phone mr-1.5 text-primary/70"></i>042-000-0000
+          &nbsp;|&nbsp;
+          <i class="fas fa-envelope mr-1.5 text-primary/70"></i>knra@knra.or.kr</span>
+        <a href="admin.html" class="hover:text-white transition"><i class="fas fa-lock text-primary/70 text-[10px] mr-1"></i>관리자</a>
+      </div>
+    </div>
+    <nav class="bg-white border-b border-gray-100 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <a href="index.html" class="flex items-center gap-3 flex-shrink-0">
+            <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center shadow-sm">
+              <i class="fas fa-running text-white text-base"></i>
+            </div>
+            <div class="leading-tight">
+              <p class="text-gray-900 font-black text-sm tracking-tight">전국러닝협회</p>
+              <p class="text-gray-400 text-[9px] tracking-widest hidden sm:block">KOREA NATIONAL RUNNING ASSOCIATION</p>
+            </div>
+          </a>
+          <div class="hidden md:flex items-center">
+            <a href="about.html" class="nav-link px-5 py-5 text-sm font-semibold text-gray-600 hover:text-primary border-b-2 border-transparent hover:border-primary transition-colors">협회소개</a>
+            <a href="organization.html" class="nav-link active px-5 py-5 text-sm font-semibold text-primary border-b-2 border-primary">조직도</a>
+            <a href="activities.html" class="nav-link px-5 py-5 text-sm font-semibold text-gray-600 hover:text-primary border-b-2 border-transparent hover:border-primary transition-colors">활동</a>
+          </div>
+          <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-500 hover:text-primary rounded-lg">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+      <div id="mobile-menu" class="md:hidden hidden border-t border-gray-100 bg-white">
+        <div class="px-4 py-3 space-y-0.5">
+          <a href="about.html" class="block px-4 py-3 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg">협회소개</a>
+          <a href="organization.html" class="block px-4 py-3 text-sm font-semibold text-primary bg-gray-50 rounded-lg">조직도</a>
+          <a href="activities.html" class="block px-4 py-3 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg">활동</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero pt-28 pb-20 sm:pt-32 sm:pb-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <nav class="breadcrumb flex items-center gap-2 text-xs mb-5">
+        <a href="index.html">홈</a>
+        <span><i class="fas fa-chevron-right text-[9px]"></i></span>
+        <span class="text-white font-semibold">조직도</span>
+      </nav>
+      <h1 class="text-3xl sm:text-4xl font-black text-white mb-2">조직도</h1>
+      <p class="text-gray-400 text-sm sm:text-base font-light">전국러닝협회의 조직 구성을 투명하게 공개합니다.</p>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <main class="bg-gray-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+
+      <!-- ── 본부 조직도 섹션 헤더 ── -->
+      <div class="text-center mb-12">
+        <p class="text-primary text-xs font-bold tracking-widest uppercase mb-3">Organization Chart</p>
+        <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-3">본부 조직도</h2>
+        <div class="section-divider-center mb-2"></div>
+        <p class="text-xs text-gray-400 tracking-widest font-semibold uppercase mt-4">Korea National Running Association</p>
+        <!-- pages API 동적 안내문구 -->
+        <div id="org-intro-content" class="hidden mt-4 max-w-xl mx-auto text-sm text-gray-500 leading-relaxed prose-content"></div>
+      </div>
+
+      <!-- ── 본부 차트 ── -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-10 mb-6 shadow-sm overflow-x-auto">
+
+        <!-- 자문단 + 회장 + 자문단 (3열) -->
+        <div class="grid grid-cols-3 gap-4 items-start min-w-[560px]">
+
+          <!-- 왼쪽 자문 -->
+          <div class="space-y-3 pt-2">
+            <div class="border border-gray-200 rounded-xl p-4 text-center bg-gray-50">
+              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">법무자문</p>
+              <p class="text-[10px] text-gray-400 mb-1.5">법무법인 지석 변호사</p>
+              <p class="font-black text-gray-800 text-sm">윤철민</p>
+            </div>
+            <div class="border border-gray-200 rounded-xl p-4 text-center bg-gray-50">
+              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">의료자문</p>
+              <p class="text-[10px] text-gray-400 mb-1.5">중앙병원 재활의학과 과장</p>
+              <p class="font-black text-gray-800 text-sm">이상숙</p>
+            </div>
+          </div>
+
+          <!-- 가운데 회장 → 사무총장 -->
+          <div class="flex flex-col items-center gap-3">
+            <!-- 회장 -->
+            <div class="bg-gray-900 text-white rounded-xl px-6 py-5 text-center w-full shadow-md">
+              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">회 장</p>
+              <p class="font-black text-xl">이중범</p>
+            </div>
+            <!-- 사무총장 -->
+            <div class="bg-primary text-white rounded-xl px-6 py-5 text-center w-full shadow-md">
+              <p class="text-[10px] font-bold text-red-200 uppercase tracking-widest mb-1.5">사무총장</p>
+              <p class="font-black text-xl">윤세준</p>
+            </div>
+          </div>
+
+          <!-- 오른쪽 자문 -->
+          <div class="space-y-3 pt-2">
+            <div class="border border-gray-200 rounded-xl p-4 text-center bg-gray-50">
+              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">스포츠자문 · 기자</p>
+              <p class="font-black text-gray-800 text-sm">김경무</p>
+            </div>
+            <div class="border border-gray-200 rounded-xl p-4 text-center bg-gray-50">
+              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">재무자문 · 회계사</p>
+              <p class="font-black text-gray-800 text-sm">김형철</p>
+            </div>
+            <div class="border border-gray-200 rounded-xl p-4 text-center bg-gray-50">
+              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">IT자문</p>
+              <p class="font-black text-gray-800 text-sm">민경진</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 부회장 4명 -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 min-w-[560px] mt-4">
+          <div>
+            <div class="border-2 border-gray-900 rounded-xl p-4 text-center w-full">
+              <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">부회장 · 대회운영</p>
+              <p class="font-black text-gray-900">정성완</p>
+            </div>
+          </div>
+          <div>
+            <div class="border-2 border-gray-900 rounded-xl p-4 text-center w-full">
+              <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">부회장 · 홍보마케팅</p>
+              <p class="font-black text-gray-900">박지흠</p>
+            </div>
+          </div>
+          <div>
+            <div class="border-2 border-gray-900 rounded-xl p-4 text-center w-full">
+              <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">부회장 · 데이터관리</p>
+              <p class="font-black text-gray-900">권수정</p>
+            </div>
+          </div>
+          <div>
+            <div class="border-2 border-gray-900 rounded-xl p-4 text-center w-full">
+              <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">부회장 · 재무</p>
+              <p class="font-black text-gray-900">위다영</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 팀장 6명 -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 min-w-[560px] mt-4">
+          <div class="border border-gray-200 rounded-xl p-3 text-center bg-gray-50">
+            <p class="text-[10px] font-bold text-gray-400 mb-1.5">운영팀장</p>
+            <p class="font-bold text-gray-800 text-sm">이재민</p>
+          </div>
+          <div class="border border-gray-200 rounded-xl p-3 text-center bg-gray-50">
+            <p class="text-[10px] font-bold text-gray-400 mb-1.5">안전팀장</p>
+            <p class="font-bold text-gray-800 text-sm">변명문</p>
+          </div>
+          <div class="border border-gray-200 rounded-xl p-3 text-center bg-gray-50">
+            <p class="text-[10px] font-bold text-gray-400 mb-1.5">홍보팀장</p>
+            <p class="font-bold text-gray-800 text-sm">정지민</p>
+          </div>
+          <div class="border border-gray-200 rounded-xl p-3 text-center bg-gray-50">
+            <p class="text-[10px] font-bold text-gray-400 mb-1.5">염찬팀장</p>
+            <p class="font-bold text-gray-800 text-sm">손미영</p>
+          </div>
+          <div class="border border-gray-200 rounded-xl p-3 text-center bg-gray-50">
+            <p class="text-[10px] font-bold text-gray-400 mb-1.5">정보팀장</p>
+            <p class="font-bold text-gray-800 text-sm">박준영</p>
+          </div>
+          <div class="border border-gray-200 rounded-xl p-3 text-center bg-gray-50">
+            <p class="text-[10px] font-bold text-gray-400 mb-1.5">총무팀장</p>
+            <p class="font-bold text-gray-800 text-sm">윤미경</p>
+          </div>
+        </div>
+
+      </div><!-- /본부 차트 카드 -->
+
+      <!-- ── 지부 조직 ── -->
+      <div class="mt-14">
+        <div class="text-center mb-10">
+          <p class="text-primary text-xs font-bold tracking-widest uppercase mb-3">Regional Branches</p>
+          <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-3">지부 조직</h2>
+          <div class="section-divider-center"></div>
+        </div>
+
+        <!-- 본부 대전 -->
+        <div class="flex flex-col items-center mb-7">
+          <div class="bg-gray-900 text-white rounded-xl px-10 py-5 text-center shadow-md">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">본 부</p>
+            <p class="font-black text-xl mb-0.5">대 전</p>
+            <p class="text-gray-400 text-xs">회장 · 총괄 · 사무국 소재지</p>
+          </div>
+        </div>
+
+        <!-- 4개 권역 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+          <!-- 충청권 -->
+          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm org-card">
+            <div class="bg-gray-900 px-5 py-3 text-center">
+              <p class="text-white font-black text-sm">충청권</p>
+            </div>
+            <div class="p-4 space-y-2">
+              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
+                <span class="text-sm font-semibold text-gray-800">세 종</span>
+                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
+              </div>
+              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
+                <span class="text-sm font-semibold text-gray-800">청 주</span>
+                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
+              </div>
+              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
+                <span class="text-sm font-semibold text-gray-800">아 산</span>
+                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 수도권 -->
+          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm org-card">
+            <div class="bg-gray-800 px-5 py-3 text-center">
+              <p class="text-white font-black text-sm">수도권</p>
+            </div>
+            <div class="p-4 space-y-2">
+              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
+                <span class="text-sm font-semibold text-gray-800">서 울</span>
+                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
+              </div>
+              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
+                <span class="text-sm font-semibold text-gray-800">남양주</span>
+                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
+              </div>
+              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
+                <span class="text-sm font-semibold text-gray-800">고 양</span>
+                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
+              </div>
+              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
+                <span class="text-sm font-semibold text-gray-800">오 산</span>
+                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 영남권 -->
+          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm org-card">
+            <div class="bg-gray-800 px-5 py-3 text-center">
+              <p class="text-white font-black text-sm">영남권</p>
+            </div>
+            <div class="p-4 space-y-2">
+              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
+                <span class="text-sm font-semibold text-gray-800">대 구</span>
+                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
+              </div>
+              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
+                <span class="text-sm font-semibold text-gray-800">부 산</span>
+                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
+              </div>
+              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
+                <span class="text-sm font-semibold text-gray-800">울 산</span>
+                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
+              </div>
+              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
+                <span class="text-sm font-semibold text-gray-800">양 산</span>
+                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 호남권 -->
+          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm org-card">
+            <div class="bg-gray-900 px-5 py-3 text-center">
+              <p class="text-white font-black text-sm">호남권</p>
+            </div>
+            <div class="p-4 space-y-2">
+              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
+                <span class="text-sm font-semibold text-gray-800">광 주</span>
+                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 지부 요약 -->
+        <div class="mt-8 text-center">
+          <p class="text-sm text-gray-400">
+            충청권 <strong class="text-gray-700">3</strong>개 &middot;
+            수도권 <strong class="text-gray-700">4</strong>개 &middot;
+            영남권 <strong class="text-gray-700">4</strong>개 &middot;
+            호남권 <strong class="text-gray-700">1</strong>개 =
+            총 <strong class="text-primary">12개 지부</strong>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-950 text-gray-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-10">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
+              <i class="fas fa-running text-white text-sm"></i>
+            </div>
+            <p class="text-white font-black text-sm">전국러닝협회</p>
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed">대한민국 러닝 문화의 발전과 건강한 커뮤니티 형성을 위해 헌신합니다.</p>
+        </div>
+        <div>
+          <h4 class="text-white font-bold text-sm mb-4">바로가기</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="about.html" class="hover:text-white transition flex items-center gap-2"><i class="fas fa-chevron-right text-[10px] text-primary/60"></i> 협회소개</a></li>
+            <li><a href="organization.html" class="hover:text-white transition flex items-center gap-2"><i class="fas fa-chevron-right text-[10px] text-primary/60"></i> 조직도</a></li>
+            <li><a href="activities.html" class="hover:text-white transition flex items-center gap-2"><i class="fas fa-chevron-right text-[10px] text-primary/60"></i> 활동</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-bold text-sm mb-4">연락처</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li class="flex items-start gap-2.5"><i class="fas fa-map-marker-alt text-primary/60 mt-0.5 w-4 flex-shrink-0"></i><span>대전광역시 (본부 소재지)</span></li>
+            <li class="flex items-center gap-2.5"><i class="fas fa-phone text-primary/60 w-4"></i><span>042-000-0000</span></li>
+            <li class="flex items-center gap-2.5"><i class="fas fa-envelope text-primary/60 w-4"></i><span>knra@knra.or.kr</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 mt-12 pt-6 text-center text-xs text-gray-700">
+        <p>© 2025 전국러닝협회 (Korea National Running Association). All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    document.getElementById('mobile-menu-btn').addEventListener('click', () =>
+      document.getElementById('mobile-menu').classList.toggle('hidden'));
+    window.addEventListener('scroll', () =>
+      document.getElementById('main-header').classList.toggle('scrolled', window.scrollY > 50));
+
+    // pages API: 조직도 안내문구
+    async function loadOrgIntro() {
+      try {
+        const res = await fetch('tables/pages?limit=50');
+        const data = await res.json();
+        const page = (data.data||[]).find(p => p.page_key === 'organization');
+        if (page && page.content && page.content.replace(/<[^>]*>/g,'').trim()) {
+          const el = document.getElementById('org-intro-content');
+          el.innerHTML = page.content;
+          el.classList.remove('hidden');
+        }
+      } catch(e) {}
+    }
+    loadOrgIntro();
+  </script>
+</body>
+</html>

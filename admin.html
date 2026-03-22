@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>관리자 - 전국러닝협회</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#c0392b', 'primary-dark': '#922b21' },
+          fontFamily: { sans: ['Noto Sans KR', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-gray-50 text-gray-900 antialiased">
+
+  <!-- =========== 로그인 =========== -->
+  <div id="login-page" class="min-h-screen flex items-center justify-center bg-gray-900 p-4">
+    <div class="w-full max-w-sm">
+      <!-- 로고 -->
+      <div class="text-center mb-8">
+        <div class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <i class="fas fa-running text-white text-xl"></i>
+        </div>
+        <h1 class="text-xl font-black text-white">전국러닝협회</h1>
+        <p class="text-gray-500 text-sm mt-1">관리자 로그인</p>
+      </div>
+      <!-- 로그인 카드 -->
+      <div class="bg-white rounded-2xl shadow-xl p-8">
+        <form id="login-form" onsubmit="return false;">
+          <div class="mb-5">
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">아이디</label>
+            <div class="relative">
+              <i class="fas fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 text-sm"></i>
+              <input id="login-id" type="text" value="admin" placeholder="admin" autocomplete="username"
+                class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200" />
+            </div>
+          </div>
+          <div class="mb-6">
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">비밀번호</label>
+            <div class="relative">
+              <i class="fas fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 text-sm"></i>
+              <input id="login-pw" type="password" value="admin123" placeholder="••••••••" autocomplete="current-password"
+                class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200" />
+            </div>
+          </div>
+          <p id="login-error" class="hidden text-red-500 text-xs mb-3 flex items-center gap-1.5">
+            <i class="fas fa-exclamation-circle"></i> 아이디 또는 비밀번호를 확인해주세요.
+          </p>
+          <button id="login-btn"
+            class="w-full bg-primary hover:bg-primary-dark text-white font-black py-3.5 rounded-xl transition text-sm flex items-center justify-center gap-2 shadow-sm">
+            <i class="fas fa-sign-in-alt"></i> 로그인
+          </button>
+          <p class="mt-4 text-center text-xs text-gray-400 bg-gray-50 rounded-lg p-2.5">
+            테스트 계정: admin / admin123
+          </p>
+        </form>
+      </div>
+      <p class="text-center mt-4 text-gray-600 text-xs">
+        <a href="index.html" class="hover:text-white transition">← 홈으로 돌아가기</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- =========== 대시보드 =========== -->
+  <div id="admin-page" class="hidden min-h-screen flex">
+
+    <!-- 사이드바 (데스크톱) -->
+    <aside class="w-56 bg-gray-900 min-h-screen flex-shrink-0 hidden lg:flex flex-col">
+      <div class="p-5 border-b border-white/10">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-running text-white text-xs"></i>
+          </div>
+          <div>
+            <p class="text-white font-black text-sm">KNRA 관리자</p>
+            <p class="text-gray-500 text-xs">전국러닝협회</p>
+          </div>
+        </div>
+      </div>
+      <nav class="flex-1 p-4 space-y-1">
+        <p class="text-gray-600 text-[10px] font-bold uppercase tracking-widest px-3 py-2">콘텐츠 관리</p>
+        <a href="#" class="admin-sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:bg-white/10 hover:text-white transition text-sm font-semibold active" data-panel="activities-list">
+          <i class="fas fa-newspaper w-4 text-center text-xs"></i> 활동 게시물
+        </a>
+        <div class="border-t border-white/10 my-3"></div>
+        <a href="index.html" target="_blank" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-500 hover:bg-white/10 hover:text-white transition text-sm">
+          <i class="fas fa-external-link-alt w-4 text-center text-xs"></i> 홈페이지 보기
+        </a>
+      </nav>
+      <div class="p-4 border-t border-white/10">
+        <button id="logout-btn"
+          class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-500 hover:bg-white/10 hover:text-white transition text-sm">
+          <i class="fas fa-sign-out-alt w-4 text-center text-xs"></i> 로그아웃
+        </button>
+      </div>
+    </aside>
+
+    <!-- 콘텐츠 영역 -->
+    <div class="flex-1 flex flex-col min-w-0">
+
+      <!-- 상단 바 -->
+      <header class="bg-white border-b border-gray-200 px-4 sm:px-6 py-3.5 flex items-center justify-between flex-shrink-0">
+        <div class="flex items-center gap-3">
+          <button id="mobile-sidebar-btn" class="lg:hidden p-2 text-gray-400 hover:text-gray-700 rounded-lg">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h2 id="panel-title" class="text-sm font-black text-gray-900">활동 게시물</h2>
+        </div>
+        <button id="logout-btn-top" class="text-xs text-gray-400 hover:text-gray-700 flex items-center gap-1.5 transition">
+          <i class="fas fa-sign-out-alt"></i> 로그아웃
+        </button>
+      </header>
+
+      <!-- 모바일 사이드바 -->
+      <div id="mobile-sidebar" class="lg:hidden fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/60" id="sidebar-overlay"></div>
+        <div class="relative w-56 h-full bg-gray-900 flex flex-col">
+          <div class="p-4 border-b border-white/10 flex items-center justify-between">
+            <p class="text-white font-black text-sm">KNRA 관리자</p>
+            <button id="close-sidebar" class="text-gray-400 hover:text-white p-1"><i class="fas fa-times"></i></button>
+          </div>
+          <nav class="flex-1 p-4 space-y-1">
+            <a href="#" class="mobile-nav flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:bg-white/10 hover:text-white text-sm font-semibold" data-panel="activities-list">
+              <i class="fas fa-newspaper w-4 text-center text-xs"></i> 활동 게시물
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- 패널 컨테이너 -->
+      <div class="flex-1 overflow-auto p-4 sm:p-6">
+
+        <!-- ======= 활동 목록 패널 ======= -->
+        <div id="panel-activities-list" class="panel">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h3 class="font-black text-gray-900">활동 게시물 관리</h3>
+              <p class="text-xs text-gray-400 mt-0.5">블로그 형식의 게시글을 작성·수정·삭제합니다.</p>
+            </div>
+            <button onclick="openActivityWrite()"
+              class="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition shadow-sm">
+              <i class="fas fa-plus text-xs"></i> 새 게시물
+            </button>
+          </div>
+
+          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead class="bg-gray-50 border-b border-gray-100">
+                  <tr>
+                    <th class="px-5 py-3.5 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">제목</th>
+                    <th class="px-5 py-3.5 text-left text-xs font-bold text-gray-400 uppercase tracking-wider hidden md:table-cell">작성자</th>
+                    <th class="px-5 py-3.5 text-left text-xs font-bold text-gray-400 uppercase tracking-wider hidden md:table-cell">게시일</th>
+                    <th class="px-5 py-3.5 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">상태</th>
+                    <th class="px-5 py-3.5 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">관리</th>
+                  </tr>
+                </thead>
+                <tbody id="activities-tbody">
+                  <tr><td colspan="5" class="px-5 py-10 text-center"><div class="spinner mx-auto"></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======= 활동 작성/수정 패널 ======= -->
+        <div id="panel-activity-write" class="panel hidden">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="font-black text-gray-900" id="activity-write-title">새 게시물 작성</h3>
+            <button onclick="switchPanel('activities-list')"
+              class="text-sm text-gray-400 hover:text-gray-700 flex items-center gap-1.5 transition">
+              <i class="fas fa-times text-xs"></i> 취소
+            </button>
+          </div>
+
+          <input type="hidden" id="edit-activity-id" />
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- 왼쪽: 제목 + 요약 + 본문 -->
+            <div class="lg:col-span-2 space-y-5">
+              <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">제목 <span class="text-primary">*</span></label>
+                <input id="act-title" type="text" placeholder="게시물 제목을 입력하세요"
+                  class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 bg-white" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">요약 설명</label>
+                <textarea id="act-summary" rows="2" placeholder="목록에 표시될 짧은 요약"
+                  class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 resize-none bg-white"></textarea>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">본문 <span class="text-primary">*</span></label>
+                <div id="act-quill"></div>
+              </div>
+            </div>
+
+            <!-- 오른쪽: 사이드 옵션 -->
+            <div class="space-y-5">
+              <!-- 대표 이미지 -->
+              <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">대표 이미지 URL</label>
+                <input id="act-thumbnail" type="url" placeholder="https://..."
+                  class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 bg-white mb-2" />
+                <div id="act-thumb-preview" class="hidden rounded-xl overflow-hidden border border-gray-200 h-28 bg-gray-50">
+                  <img id="act-thumb-img" src="" alt="" class="w-full h-full object-cover" />
+                </div>
+              </div>
+
+              <!-- 갤러리 이미지 -->
+              <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                  갤러리 이미지 URL
+                  <span class="text-gray-400 font-normal text-[10px] normal-case ml-1">(한 줄에 하나씩)</span>
+                </label>
+                <textarea id="act-images" rows="4" placeholder="https://example.com/img1.jpg&#10;https://example.com/img2.jpg"
+                  class="w-full px-4 py-3 border border-gray-200 rounded-xl text-xs font-mono focus:outline-none focus:border-gray-400 resize-none bg-white"></textarea>
+              </div>
+
+              <!-- 작성자 -->
+              <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">작성자</label>
+                <input id="act-author" type="text" value="사무국"
+                  class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 bg-white" />
+              </div>
+
+              <!-- 게시일 -->
+              <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">게시일</label>
+                <input id="act-date" type="date"
+                  class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 bg-white" />
+              </div>
+
+              <!-- 공개 여부 -->
+              <div class="flex items-center justify-between bg-white rounded-xl p-4 border border-gray-200">
+                <div>
+                  <p class="text-sm font-bold text-gray-900">공개 여부</p>
+                  <p class="text-xs text-gray-400 mt-0.5">공개 상태로 게시합니다</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="act-published" class="sr-only peer" checked />
+                  <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-primary transition-all
+                    after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white
+                    after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div>
+                </label>
+              </div>
+
+              <!-- 저장 버튼 -->
+              <button id="act-submit-btn"
+                class="w-full bg-gray-900 hover:bg-gray-700 text-white font-black py-3.5 rounded-xl transition flex items-center justify-center gap-2 shadow-sm text-sm">
+                <i class="fas fa-save"></i>
+                <span id="act-submit-label">저장하기</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /패널 컨테이너 -->
+    </div>
+  </div>
+
+  <!-- 토스트 -->
+  <div id="toast" class="toast">
+    <i class="fas fa-check-circle text-sm" id="toast-icon"></i>
+    <span id="toast-msg"></span>
+  </div>
+
+  <script src="js/main.js?v=2"></script>
+  <script>
+    // ═══ AUTH ═══
+    const ADMIN_ID = 'admin', ADMIN_PW = 'admin123';
+    let activityQuill = null;
+    let editingActivityId = null;
+
+    function checkAuth() {
+      if (sessionStorage.getItem('nra_admin') === 'true') showDashboard();
+    }
+    function showDashboard() {
+      document.getElementById('login-page').classList.add('hidden');
+      document.getElementById('admin-page').classList.remove('hidden');
+      loadActivities();
+    }
+    function logout() {
+      sessionStorage.removeItem('nra_admin');
+      document.getElementById('admin-page').classList.add('hidden');
+      document.getElementById('login-page').classList.remove('hidden');
+    }
+
+    document.getElementById('login-btn').addEventListener('click', () => {
+      const id  = document.getElementById('login-id').value;
+      const pw  = document.getElementById('login-pw').value;
+      if (id === ADMIN_ID && pw === ADMIN_PW) {
+        sessionStorage.setItem('nra_admin', 'true');
+        document.getElementById('login-error').classList.add('hidden');
+        showDashboard();
+      } else {
+        document.getElementById('login-error').classList.remove('hidden');
+      }
+    });
+    document.getElementById('login-pw').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('login-btn').click();
+    });
+    document.getElementById('logout-btn').addEventListener('click', logout);
+    document.getElementById('logout-btn-top').addEventListener('click', logout);
+
+    // ═══ PANEL ═══
+    function switchPanel(name) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById('panel-' + name).classList.remove('hidden');
+      const titles = {
+        'activities-list': '활동 게시물',
+        'activity-write':  '게시물 작성/수정'
+      };
+      document.getElementById('panel-title').textContent = titles[name] || '';
+      document.querySelectorAll('.admin-sidebar-link').forEach(a => {
+        a.classList.remove('active', 'bg-white/20', 'text-white');
+        if (a.dataset.panel === name) a.classList.add('active', 'bg-white/20', 'text-white');
+      });
+      document.getElementById('mobile-sidebar').classList.add('hidden');
+    }
+    document.querySelectorAll('.admin-sidebar-link, .mobile-nav').forEach(a =>
+      a.addEventListener('click', e => { e.preventDefault(); switchPanel(a.dataset.panel); })
+    );
+
+    // ═══ ACTIVITIES: 목록 로드 ═══
+    async function loadActivities() {
+      try {
+        const { data: dbData, error } = await supabaseClient.from('activities').select('*').limit(200);
+        if (error) throw error;
+        const items = (dbData||[]).sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+        const tbody = document.getElementById('activities-tbody');
+        if (!items.length) {
+          tbody.innerHTML = '<tr><td colspan="5" class="px-5 py-10 text-center text-gray-400 text-sm">등록된 게시물이 없습니다.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = items.map(item => `
+          <tr class="border-b border-gray-50 hover:bg-gray-50/60 transition">
+            <td class="px-5 py-3.5">
+              <a href="activity-detail.html?id=${item.id}" target="_blank"
+                 class="text-sm font-semibold text-gray-800 hover:text-primary transition line-clamp-1">${item.title}</a>
+            </td>
+            <td class="px-5 py-3.5 hidden md:table-cell text-xs text-gray-400">${item.author||'-'}</td>
+            <td class="px-5 py-3.5 hidden md:table-cell text-xs text-gray-400">${fmtDate(item.published_at||item.created_at)}</td>
+            <td class="px-5 py-3.5">
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${item.is_published!==false ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-400'}">
+                ${item.is_published!==false ? '공개' : '비공개'}
+              </span>
+            </td>
+            <td class="px-5 py-3.5 text-center">
+              <div class="flex items-center justify-center gap-1">
+                <button onclick="editActivity('${item.id}')" class="p-2 text-gray-300 hover:text-gray-700 rounded-lg transition" title="수정">
+                  <i class="fas fa-edit text-xs"></i>
+                </button>
+                <button onclick="deleteActivity('${item.id}','${item.title.replace(/'/g,"\\'")}')" class="p-2 text-gray-300 hover:text-red-500 rounded-lg transition" title="삭제">
+                  <i class="fas fa-trash-alt text-xs"></i>
+                </button>
+              </div>
+            </td>
+          </tr>`).join('');
+      } catch(e) {
+        document.getElementById('activities-tbody').innerHTML =
+          '<tr><td colspan="5" class="px-5 py-8 text-center text-red-400 text-sm">로드 실패</td></tr>';
+      }
+    }
+
+    function fmtDate(d) {
+      if (!d) return '-';
+      const dt = new Date(d);
+      return `${dt.getFullYear()}.${String(dt.getMonth()+1).padStart(2,'0')}.${String(dt.getDate()).padStart(2,'0')}`;
+    }
+
+    // ═══ ACTIVITIES: 새 글 작성 ═══
+    function openActivityWrite() {
+      editingActivityId = null;
+      resetActivityForm();
+      document.getElementById('activity-write-title').textContent = '새 게시물 작성';
+      document.getElementById('act-submit-label').textContent = '저장하기';
+      switchPanel('activity-write');
+      setTimeout(initActivityQuill, 80);
+    }
+
+    function initActivityQuill() {
+      if (!activityQuill) {
+        activityQuill = new Quill('#act-quill', {
+          theme: 'snow',
+          placeholder: '본문 내용을 작성하세요...',
+          modules: {
+            toolbar: [
+              [{header:[2,3,false]}],
+              ['bold','italic','underline'],
+              [{list:'ordered'},{list:'bullet'}],
+              ['link'],
+              ['clean']
+            ]
+          }
+        });
+      }
+    }
+
+    // ═══ ACTIVITIES: 수정 ═══
+    async function editActivity(id) {
+      try {
+        const { data: item, error } = await supabaseClient.from('activities').select('*').eq('id', id).single();
+        if (error) throw error;
+        editingActivityId = id;
+        document.getElementById('edit-activity-id').value = id;
+        document.getElementById('act-title').value   = item.title||'';
+        document.getElementById('act-summary').value = item.summary||'';
+        document.getElementById('act-thumbnail').value= item.thumbnail||'';
+        document.getElementById('act-author').value  = item.author||'사무국';
+        document.getElementById('act-published').checked = item.is_published!==false;
+        if (item.published_at) {
+          document.getElementById('act-date').value = new Date(item.published_at).toISOString().split('T')[0];
+        }
+        let imgs = '';
+        if (item.images) {
+          if (Array.isArray(item.images)) imgs = item.images.join('\n');
+          else { try { imgs = JSON.parse(item.images).join('\n'); } catch { imgs = item.images; } }
+        }
+        document.getElementById('act-images').value = imgs;
+        if (item.thumbnail) {
+          document.getElementById('act-thumb-img').src = item.thumbnail;
+          document.getElementById('act-thumb-preview').classList.remove('hidden');
+        }
+        document.getElementById('activity-write-title').textContent = '게시물 수정';
+        document.getElementById('act-submit-label').textContent = '수정 저장';
+        switchPanel('activity-write');
+        setTimeout(() => { initActivityQuill(); activityQuill.root.innerHTML = item.content||''; }, 80);
+      } catch(e) { showToast('불러오기 실패','error'); }
+    }
+
+    // ═══ ACTIVITIES: 삭제 ═══
+    async function deleteActivity(id, title) {
+      if (!confirm(`"${title}" 게시물을 삭제하시겠습니까?`)) return;
+      try {
+        const { error } = await supabaseClient.from('activities').delete().eq('id', id);
+        if (error) throw error;
+        showToast('삭제되었습니다.', 'success');
+        loadActivities();
+      } catch(e) { showToast('삭제 실패', 'error'); }
+    }
+
+    // 썸네일 미리보기
+    document.getElementById('act-thumbnail').addEventListener('input', function() {
+      const url = this.value.trim();
+      const preview = document.getElementById('act-thumb-preview');
+      const img     = document.getElementById('act-thumb-img');
+      if (url) {
+        img.src = url;
+        preview.classList.remove('hidden');
+        img.onerror = () => preview.classList.add('hidden');
+      } else {
+        preview.classList.add('hidden');
+      }
+    });
+
+    // ═══ ACTIVITIES: 저장 ═══
+    document.getElementById('act-submit-btn').addEventListener('click', async () => {
+      const title = document.getElementById('act-title').value.trim();
+      if (!title) { showToast('제목을 입력해주세요.', 'error'); return; }
+
+      const imgsRaw  = document.getElementById('act-images').value.trim();
+      const images   = imgsRaw ? imgsRaw.split('\n').map(s=>s.trim()).filter(Boolean) : [];
+      const pubDateV = document.getElementById('act-date').value;
+      const pubDate  = pubDateV ? new Date(pubDateV).toISOString() : new Date().toISOString();
+
+      const payload = {
+        title,
+        summary:    document.getElementById('act-summary').value.trim(),
+        content:    activityQuill ? activityQuill.root.innerHTML : '',
+        thumbnail:  document.getElementById('act-thumbnail').value.trim(),
+        images,
+        author:     document.getElementById('act-author').value.trim() || '사무국',
+        published_at: pubDate,
+        is_published: document.getElementById('act-published').checked,
+      };
+
+      const btn = document.getElementById('act-submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> 저장 중...';
+
+      try {
+        let dbError;
+        if (editingActivityId) {
+          const { error } = await supabaseClient.from('activities').update(payload).eq('id', editingActivityId);
+          dbError = error;
+        } else {
+          const { error } = await supabaseClient.from('activities').insert([payload]);
+          dbError = error;
+        }
+        if (!dbError) {
+          showToast(editingActivityId ? '수정되었습니다!' : '등록되었습니다!', 'success');
+          editingActivityId = null;
+          resetActivityForm();
+          switchPanel('activities-list');
+          loadActivities();
+        } else {
+          console.error("Supabase Error:", dbError);
+          showToast('DB 에러: ' + dbError.message, 'error');
+        }
+      } catch(e) {
+        console.error("Catch Error:", e);
+        showToast('저장 실패. 네트워크 상태를 확인해주세요.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save"></i> <span id="act-submit-label">저장하기</span>';
+      }
+    });
+
+    function resetActivityForm() {
+      editingActivityId = null;
+      ['act-title','act-summary','act-thumbnail','act-images'].forEach(id =>
+        document.getElementById(id).value = ''
+      );
+      document.getElementById('act-author').value   = '사무국';
+      document.getElementById('act-published').checked = true;
+      document.getElementById('act-date').value     = new Date().toISOString().split('T')[0];
+      document.getElementById('act-thumb-preview').classList.add('hidden');
+      if (activityQuill) activityQuill.setContents([]);
+    }
+
+    // ═══ 토스트 ═══
+    function showToast(msg, type = '') {
+      const t    = document.getElementById('toast');
+      const icon = document.getElementById('toast-icon');
+      document.getElementById('toast-msg').textContent = msg;
+      t.className = 'toast';
+      if (type) t.classList.add(type);
+      icon.className = type === 'success'
+        ? 'fas fa-check-circle text-sm'
+        : type === 'error'
+        ? 'fas fa-exclamation-circle text-sm'
+        : 'fas fa-info-circle text-sm';
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // ═══ 모바일 사이드바 ═══
+    document.getElementById('mobile-sidebar-btn').addEventListener('click', () =>
+      document.getElementById('mobile-sidebar').classList.remove('hidden'));
+    document.getElementById('close-sidebar').addEventListener('click', () =>
+      document.getElementById('mobile-sidebar').classList.add('hidden'));
+    document.getElementById('sidebar-overlay').addEventListener('click', () =>
+      document.getElementById('mobile-sidebar').classList.add('hidden'));
+
+    // ═══ 초기화 ═══
+    document.getElementById('act-date').value = new Date().toISOString().split('T')[0];
+    checkAuth();
+  </script>
+</body>
+</html>

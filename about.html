@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>협회소개 - 전국러닝협회</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#c0392b',
+            'primary-dark': '#922b21',
+          },
+          fontFamily: { sans: ['Noto Sans KR', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-white text-gray-900 antialiased">
+
+  <!-- HEADER -->
+  <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="bg-gray-900 text-gray-400 text-xs py-1.5 px-4 hidden md:block">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <span><i class="fas fa-phone mr-1.5 text-primary/70"></i>042-000-0000
+          &nbsp;|&nbsp;
+          <i class="fas fa-envelope mr-1.5 text-primary/70"></i>knra@knra.or.kr</span>
+        <a href="admin.html" class="hover:text-white transition"><i class="fas fa-lock text-primary/70 text-[10px] mr-1"></i>관리자</a>
+      </div>
+    </div>
+    <nav class="bg-white border-b border-gray-100 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <a href="index.html" class="flex items-center gap-3 flex-shrink-0">
+            <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center shadow-sm">
+              <i class="fas fa-running text-white text-base"></i>
+            </div>
+            <div class="leading-tight">
+              <p class="text-gray-900 font-black text-sm tracking-tight">전국러닝협회</p>
+              <p class="text-gray-400 text-[9px] tracking-widest hidden sm:block">KOREA NATIONAL RUNNING ASSOCIATION</p>
+            </div>
+          </a>
+          <div class="hidden md:flex items-center">
+            <a href="about.html" class="nav-link active px-5 py-5 text-sm font-semibold text-primary border-b-2 border-primary">협회소개</a>
+            <a href="organization.html" class="nav-link px-5 py-5 text-sm font-semibold text-gray-600 hover:text-primary border-b-2 border-transparent hover:border-primary transition-colors">조직도</a>
+            <a href="activities.html" class="nav-link px-5 py-5 text-sm font-semibold text-gray-600 hover:text-primary border-b-2 border-transparent hover:border-primary transition-colors">활동</a>
+          </div>
+          <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-500 hover:text-primary rounded-lg">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+      <div id="mobile-menu" class="md:hidden hidden border-t border-gray-100 bg-white">
+        <div class="px-4 py-3 space-y-0.5">
+          <a href="about.html" class="block px-4 py-3 text-sm font-semibold text-primary bg-gray-50 rounded-lg">협회소개</a>
+          <a href="organization.html" class="block px-4 py-3 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg">조직도</a>
+          <a href="activities.html" class="block px-4 py-3 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg">활동</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero pt-28 pb-20 sm:pt-32 sm:pb-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <nav class="breadcrumb flex items-center gap-2 text-xs mb-5">
+        <a href="index.html">홈</a>
+        <span><i class="fas fa-chevron-right text-[9px]"></i></span>
+        <span class="text-white font-semibold">협회소개</span>
+      </nav>
+      <h1 class="text-3xl sm:text-4xl font-black text-white mb-2">협회소개</h1>
+      <p class="text-gray-400 text-sm sm:text-base font-light">전국러닝협회의 설립 배경, 비전, 미션 그리고 연혁을 소개합니다.</p>
+    </div>
+  </section>
+
+  <!-- SUB TAB NAV -->
+  <nav class="bg-white border-b border-gray-200 sticky top-[88px] z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex overflow-x-auto">
+        <button class="tab-btn flex-shrink-0 px-5 py-4 text-sm font-semibold border-b-2 border-primary text-primary transition whitespace-nowrap" data-tab="greeting">인사말</button>
+        <button class="tab-btn flex-shrink-0 px-5 py-4 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-gray-700 transition whitespace-nowrap" data-tab="vision">비전 및 미션</button>
+        <button class="tab-btn flex-shrink-0 px-5 py-4 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-gray-700 transition whitespace-nowrap" data-tab="history">연혁</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <main class="bg-gray-50">
+
+    <!-- ── 인사말 ── -->
+    <div id="tab-greeting" class="tab-content">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+
+        <!-- 헤더 (가운데 정렬) -->
+        <div class="text-center mb-10">
+          <p class="text-primary text-xs font-bold tracking-widest uppercase mb-3">Chairman's Greeting</p>
+          <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-3">회장 인사말</h2>
+          <div class="section-divider-center"></div>
+        </div>
+
+        <!-- pages API로 동적 로드 -->
+        <div id="greeting-content" class="prose-content text-gray-600 leading-relaxed">
+          <div class="flex items-center justify-center gap-3 py-8">
+            <div class="spinner"></div>
+            <span class="text-sm text-gray-400 ml-3">내용을 불러오는 중...</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── 비전 및 미션 ── -->
+    <div id="tab-vision" class="tab-content hidden max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <div class="text-center mb-14">
+        <p class="text-primary text-xs font-bold tracking-widest uppercase mb-3">Vision & Mission</p>
+        <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-3">비전 및 미션</h2>
+        <div class="section-divider-center"></div>
+      </div>
+
+      <!-- 비전 배너 -->
+      <div class="bg-gray-900 rounded-2xl p-10 sm:p-14 text-center text-white mb-10 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+        <p class="text-gray-500 text-xs font-bold tracking-widest uppercase mb-4">Vision</p>
+        <h3 class="text-xl sm:text-2xl lg:text-3xl font-black text-white mb-4">"달리는 대한민국, 건강한 미래"</h3>
+        <p class="text-gray-400 leading-relaxed max-w-xl mx-auto font-light text-sm sm:text-base">
+          전국 모든 시민이 러닝을 통해 건강하고 활기찬 삶을 누리며,
+          러닝이 대한민국 국민 건강의 핵심 문화로 자리 잡는 세상을 만들어 갑니다.
+        </p>
+        <!-- 레드 포인트 라인 -->
+        <div class="w-12 h-0.5 bg-primary mx-auto mt-8"></div>
+      </div>
+
+      <!-- 3가지 미션 -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+        <div class="bg-white rounded-2xl p-7 text-center border border-gray-100 shadow-sm">
+          <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center mx-auto mb-5 shadow">
+            <i class="fas fa-shield-alt text-white text-lg"></i>
+          </div>
+          <h4 class="font-black text-gray-900 mb-2">안전한 러닝</h4>
+          <p class="text-sm text-gray-400 leading-relaxed">체계적인 대회 안전 관리와 안전 교육으로 모든 러너가 안심하고 달릴 수 있는 환경을 만듭니다.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-7 text-center border border-gray-100 shadow-sm">
+          <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center mx-auto mb-5 shadow">
+            <i class="fas fa-users text-white text-lg"></i>
+          </div>
+          <h4 class="font-black text-gray-900 mb-2">커뮤니티 성장</h4>
+          <p class="text-sm text-gray-400 leading-relaxed">전국 러닝 크루와 동호회를 지원하여 건강한 러닝 생태계와 탄탄한 네트워크를 구축합니다.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-7 text-center border border-gray-100 shadow-sm">
+          <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center mx-auto mb-5 shadow">
+            <i class="fas fa-trophy text-white text-lg"></i>
+          </div>
+          <h4 class="font-black text-gray-900 mb-2">선수 육성</h4>
+          <p class="text-sm text-gray-400 leading-relaxed">재능 있는 장거리 선수를 발굴하고 체계적으로 지원하여 대한민국 마라톤의 국제 경쟁력을 높입니다.</p>
+        </div>
+      </div>
+
+      <!-- 핵심가치 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="flex items-start gap-4 p-5 bg-white rounded-xl border border-gray-100 shadow-sm">
+          <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-balance-scale text-gray-700"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-gray-900 mb-1 text-sm">신뢰 · Trust</h4>
+            <p class="text-xs text-gray-400 leading-relaxed">투명한 운영과 공정한 대회 진행으로 모든 러너의 신뢰를 얻습니다.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-5 bg-white rounded-xl border border-gray-100 shadow-sm">
+          <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-award text-gray-700"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-gray-900 mb-1 text-sm">전문성 · Expertise</h4>
+            <p class="text-xs text-gray-400 leading-relaxed">러닝 전문 지식과 축적된 노하우로 최고 수준의 서비스를 제공합니다.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-5 bg-white rounded-xl border border-gray-100 shadow-sm">
+          <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-hands-helping text-gray-700"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-gray-900 mb-1 text-sm">포용 · Inclusion</h4>
+            <p class="text-xs text-gray-400 leading-relaxed">엘리트부터 초보까지, 누구나 환영받는 열린 협회를 지향합니다.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-5 bg-white rounded-xl border border-gray-100 shadow-sm">
+          <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-leaf text-gray-700"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-gray-900 mb-1 text-sm">지속가능 · Sustainability</h4>
+            <p class="text-xs text-gray-400 leading-relaxed">친환경 대회 운영과 지역사회 협력으로 미래 세대와 함께합니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 연혁 ── -->
+    <div id="tab-history" class="tab-content hidden max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <div class="text-center mb-14">
+        <p class="text-primary text-xs font-bold tracking-widest uppercase mb-3">History</p>
+        <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-3">협회 연혁</h2>
+        <div class="section-divider-center"></div>
+      </div>
+
+      <div class="space-y-10">
+        <!-- 2025 -->
+        <div>
+          <div class="flex items-center gap-4 mb-5">
+            <span class="text-2xl font-black text-primary">2025</span>
+            <div class="flex-1 h-px bg-gray-200"></div>
+          </div>
+          <div class="space-y-4 ml-2">
+            <div class="timeline-item pb-5"><span class="text-xs text-primary font-bold">05월</span><p class="text-sm text-gray-700 font-medium mt-0.5">전국러닝협회 공식 홈페이지 개편</p></div>
+            <div class="timeline-item pb-5"><span class="text-xs text-primary font-bold">03월</span><p class="text-sm text-gray-700 font-medium mt-0.5">지부 조직 확대 — 12개 지부 완성</p></div>
+            <div class="timeline-item pb-5"><span class="text-xs text-primary font-bold">01월</span><p class="text-sm text-gray-700 font-medium mt-0.5">2025년 연간 대회 일정 발표 및 참가 신청 개시</p></div>
+          </div>
+        </div>
+        <!-- 2024 -->
+        <div>
+          <div class="flex items-center gap-4 mb-5">
+            <span class="text-2xl font-black text-gray-700">2024</span>
+            <div class="flex-1 h-px bg-gray-200"></div>
+          </div>
+          <div class="space-y-4 ml-2">
+            <div class="timeline-item pb-5"><span class="text-xs text-primary font-bold">10월</span><p class="text-sm text-gray-700 font-medium mt-0.5">전국 러닝 크루 페스티벌 개최 (대전, 80개 크루 참가)</p></div>
+            <div class="timeline-item pb-5"><span class="text-xs text-primary font-bold">05월</span><p class="text-sm text-gray-700 font-medium mt-0.5">영남권 지부 (대구·부산·울산·양산) 확대 개편</p></div>
+            <div class="timeline-item pb-5"><span class="text-xs text-primary font-bold">03월</span><p class="text-sm text-gray-700 font-medium mt-0.5">수도권 지부 (서울·남양주·고양·오산) 신설</p></div>
+          </div>
+        </div>
+        <!-- 2023 -->
+        <div>
+          <div class="flex items-center gap-4 mb-5">
+            <span class="text-2xl font-black text-gray-700">2023</span>
+            <div class="flex-1 h-px bg-gray-200"></div>
+          </div>
+          <div class="space-y-4 ml-2">
+            <div class="timeline-item pb-5"><span class="text-xs text-primary font-bold">09월</span><p class="text-sm text-gray-700 font-medium mt-0.5">사무국 대전 이전 및 본부 체계 확립</p></div>
+            <div class="timeline-item pb-5"><span class="text-xs text-primary font-bold">05월</span><p class="text-sm text-gray-700 font-medium mt-0.5">제3대 이중범 회장 취임</p></div>
+            <div class="timeline-item pb-5"><span class="text-xs text-primary font-bold">03월</span><p class="text-sm text-gray-700 font-medium mt-0.5">러닝 안전 교육 과정 정식 개설</p></div>
+          </div>
+        </div>
+        <!-- 2022 -->
+        <div>
+          <div class="flex items-center gap-4 mb-5">
+            <span class="text-2xl font-black text-gray-700">2022</span>
+            <div class="flex-1 h-px bg-gray-200"></div>
+          </div>
+          <div class="space-y-4 ml-2">
+            <div class="timeline-item pb-5"><span class="text-xs text-primary font-bold">06월</span><p class="text-sm text-gray-700 font-medium mt-0.5">문화체육관광부 우수 체육단체 표창 수상</p></div>
+            <div class="timeline-item pb-5"><span class="text-xs text-primary font-bold">01월</span><p class="text-sm text-gray-700 font-medium mt-0.5">러닝 크루 공식 등록 제도 시행</p></div>
+          </div>
+        </div>
+        <!-- 창립 -->
+        <div>
+          <div class="flex items-center gap-4 mb-5">
+            <span class="text-2xl font-black text-primary">창립</span>
+            <div class="flex-1 h-px bg-gray-200"></div>
+            <span class="text-xs font-bold text-primary border border-primary/30 px-3 py-1 rounded-full">설립</span>
+          </div>
+          <div class="space-y-4 ml-2">
+            <div class="timeline-item pb-5"><span class="text-xs text-primary font-bold">03월</span><p class="text-sm text-gray-700 font-medium mt-0.5">전국러닝협회 창립 (초대 창립 회원 80명)</p></div>
+            <div class="timeline-item pb-5"><span class="text-xs text-primary font-bold">03월</span><p class="text-sm text-gray-700 font-medium mt-0.5">문화체육관광부 인가 사단법인 등록</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-950 text-gray-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-10">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
+              <i class="fas fa-running text-white text-sm"></i>
+            </div>
+            <p class="text-white font-black text-sm">전국러닝협회</p>
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed">대한민국 러닝 문화의 발전과 건강한 커뮤니티 형성을 위해 헌신합니다.</p>
+        </div>
+        <div>
+          <h4 class="text-white font-bold text-sm mb-4">바로가기</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="about.html" class="hover:text-white transition flex items-center gap-2"><i class="fas fa-chevron-right text-[10px] text-primary/60"></i> 협회소개</a></li>
+            <li><a href="organization.html" class="hover:text-white transition flex items-center gap-2"><i class="fas fa-chevron-right text-[10px] text-primary/60"></i> 조직도</a></li>
+            <li><a href="activities.html" class="hover:text-white transition flex items-center gap-2"><i class="fas fa-chevron-right text-[10px] text-primary/60"></i> 활동</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-bold text-sm mb-4">연락처</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li class="flex items-start gap-2.5"><i class="fas fa-map-marker-alt text-primary/60 mt-0.5 w-4 flex-shrink-0"></i><span>대전광역시 (본부 소재지)</span></li>
+            <li class="flex items-center gap-2.5"><i class="fas fa-phone text-primary/60 w-4"></i><span>042-000-0000</span></li>
+            <li class="flex items-center gap-2.5"><i class="fas fa-envelope text-primary/60 w-4"></i><span>knra@knra.or.kr</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 mt-12 pt-6 text-center text-xs text-gray-700">
+        <p>© 2025 전국러닝협회 (Korea National Running Association). All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // ─── 탭 전환 ───
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => {
+          b.classList.remove('border-primary','text-primary');
+          b.classList.add('border-transparent','text-gray-400');
+        });
+        btn.classList.add('border-primary','text-primary');
+        btn.classList.remove('border-transparent','text-gray-400');
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+        document.getElementById('tab-'+btn.dataset.tab).classList.remove('hidden');
+      });
+    });
+    const hash = location.hash.replace('#','');
+    if (hash) document.querySelector(`[data-tab="${hash}"]`)?.click();
+
+    // ─── 인사말 정적 렌더링 ───
+    document.getElementById('greeting-content').innerHTML = `
+      <p class="text-lg font-semibold text-gray-800 leading-relaxed mb-4">
+        "전국러닝협회를 찾아주신 모든 러너 여러분께 진심으로 감사드립니다."
+      </p>
+      <p class="mb-4">러닝은 더 이상 운동선수만의 전유물이 아닙니다. 이른 새벽 공원을 달리는 직장인,
+        한강을 함께 뛰는 러닝 크루, 인생 첫 마라톤을 완주하는 중년의 도전까지
+        달리기는 지금 대한민국 곳곳에서 살아 숨쉬고 있습니다.</p>
+      <p class="mb-4">전국러닝협회는 이 모든 러너들의 든든한 동반자가 되고자 합니다.
+        <strong>대전을 거점으로 전국 12개 지부</strong>를 통해 지역 러너들의 목소리를 직접 듣고,
+        안전하고 체계적인 대회 운영, 전문 훈련 프로그램 지원,
+        러닝 크루 네트워크 강화에 온 힘을 쏟겠습니다.</p>
+      <p class="mb-4">러닝은 혼자 하는 운동이지만, 함께할 때 더 멀리 달릴 수 있습니다.
+        전국러닝협회가 여러분의 모든 발걸음 곁에 함께하겠습니다.</p>
+      <p class="font-bold text-gray-800 pt-2">전국러닝협회 회장 <span>이중범</span></p>
+    `;
+
+    // ─── 공통 ───
+    document.getElementById('mobile-menu-btn').addEventListener('click', () =>
+      document.getElementById('mobile-menu').classList.toggle('hidden'));
+    window.addEventListener('scroll', () =>
+      document.getElementById('main-header').classList.toggle('scrolled', window.scrollY > 50));
+  </script>
+</body>
+</html>
