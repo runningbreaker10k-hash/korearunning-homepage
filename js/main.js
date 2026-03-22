@@ -57,4 +57,63 @@ function createScrollToTop() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => { createScrollToTop(); });
+function injectMetaTags() {
+  if (document.querySelector('meta[name="description"]')) return;
+  const metaHTML = `
+    <!-- 공통 SEO 태그 (JS로 주입됨) -->
+    <meta name="description" content="전국러닝협회(KNRA) 공식 홈페이지입니다. 대한민국 러닝 문화 발전과 건강한 커뮤니티 형성을 위해 헌신합니다." />
+    <meta name="keywords" content="전국러닝협회, KNRA, 마라톤, 러닝크루, 러닝, 달리기, 러너" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="전국러닝협회 - 달리는 대한민국, 건강한 미래" />
+    <meta property="og:description" content="전국러닝협회(KNRA) 공식 홈페이지입니다. 대한민국 러닝 문화 발전과 건강한 커뮤니티 형성을 위해 헌신합니다." />
+  `;
+  document.head.insertAdjacentHTML('beforeend', metaHTML);
+}
+
+async function loadComponents() {
+  try {
+    const [headerRes, footerRes] = await Promise.all([
+      fetch('components/header.html'),
+      fetch('components/footer.html')
+    ]);
+    const headerEl = document.getElementById('header-placeholder');
+    if (headerEl) headerEl.outerHTML = await headerRes.text();
+    
+    const footerEl = document.getElementById('footer-placeholder');
+    if (footerEl) footerEl.outerHTML = await footerRes.text();
+
+    // Active Nav Update
+    const path = window.location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('#main-header a[href]').forEach(link => {
+      const href = link.getAttribute('href');
+      if (path === href && href !== 'index.html' && href !== 'admin.html') {
+        if (link.classList.contains('nav-link')) {
+          link.classList.remove('text-gray-600', 'border-transparent');
+          link.classList.add('text-primary', 'border-primary');
+        } else if (link.classList.contains('block')) {
+          link.classList.remove('text-gray-700');
+          link.classList.add('text-primary', 'bg-gray-50');
+        }
+      }
+    });
+
+    // Rebind header events
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileBtn && mobileMenu) {
+      mobileBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+    }
+    
+    const mainHeader = document.getElementById('main-header');
+    if (mainHeader) {
+      mainHeader.classList.toggle('scrolled', window.scrollY > 50);
+      window.addEventListener('scroll', () => mainHeader.classList.toggle('scrolled', window.scrollY > 50));
+    }
+  } catch(e) { console.error('Failed to load components', e); }
+}
+
+document.addEventListener('DOMContentLoaded', () => { 
+  injectMetaTags();
+  createScrollToTop(); 
+  loadComponents();
+});
