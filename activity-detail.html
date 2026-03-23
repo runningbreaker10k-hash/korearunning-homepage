@@ -4,6 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>활동 상세 - 전국러닝협회</title>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="활동 상세 - 전국러닝협회" />
+  <meta property="og:description" content="전국러닝협회 활동 소식" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1513593771513-7b58b6c4af38?w=1200&q=80" />
+  <meta property="og:url" content="" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
@@ -118,6 +124,22 @@
     let galleryImages = [];
     let lbIdx = 0;
 
+    function updateOpenGraphTags(data) {
+      const updateMeta = (property, content) => {
+        let tag = document.querySelector(`meta[property="${property}"]`);
+        if (!tag) {
+          tag = document.createElement('meta');
+          tag.setAttribute('property', property);
+          document.head.appendChild(tag);
+        }
+        tag.setAttribute('content', content);
+      };
+      updateMeta('og:title', data.title);
+      updateMeta('og:description', data.description);
+      updateMeta('og:image', data.image);
+      updateMeta('og:url', data.url);
+    }
+
     async function loadDetail() {
       if (!id) {
         showError();
@@ -187,6 +209,14 @@
           grid.appendChild(div);
         });
       }
+
+      // Open Graph 메타 태그 업데이트 (SNS 공유용)
+      updateOpenGraphTags({
+        title: item.title,
+        description: item.summary || item.content.replace(/<[^>]*>/g, '').substring(0, 150),
+        image: thumb,
+        url: window.location.href
+      });
 
       // 숨기기/보이기
       document.getElementById('detail-loading').classList.add('hidden');
