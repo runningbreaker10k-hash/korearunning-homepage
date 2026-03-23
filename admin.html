@@ -14,13 +14,13 @@
       'https://ihcyoqfjnvvtoxtyhrhd.supabase.co',
       'sb_publishable_NXunyAEKeeEdLHwZJNZXLA_j2MrnWoZ'
     );
-    console.log('✓ Supabase 초기화됨');
   </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2/dist/browser-image-compression.js"></script>
   <link rel="stylesheet" href="css/style.css" />
   <script>
     tailwind.config = {
@@ -237,11 +237,12 @@
               <!-- 대표 이미지 -->
               <div>
                 <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-                  대표 이미지 URL
+                  대표 이미지
                   <span class="text-gray-400 font-normal text-[10px] normal-case ml-1">(선택)</span>
                 </label>
-                <input id="act-thumbnail" type="url" placeholder="https://..."
+                <input id="act-thumbnail" type="file" accept="image/*"
                   class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 bg-white mb-2" />
+                <input type="hidden" id="act-thumbnail-url" />
                 <div id="act-thumb-preview"
                   class="hidden rounded-xl overflow-hidden border border-gray-200 h-28 bg-gray-50">
                   <img id="act-thumb-img" src="" alt="" class="w-full h-full object-cover" />
@@ -251,12 +252,12 @@
               <!-- 갤러리 이미지 -->
               <div>
                 <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-                  갤러리 이미지 URL
-                  <span class="text-gray-400 font-normal text-[10px] normal-case ml-1">(선택, 한 줄에 하나씩)</span>
+                  갤러리 이미지
+                  <span class="text-gray-400 font-normal text-[10px] normal-case ml-1">(선택, 최대 5장)</span>
                 </label>
-                <textarea id="act-images" rows="4"
-                  placeholder="https://example.com/img1.jpg&#10;https://example.com/img2.jpg"
-                  class="w-full px-4 py-3 border border-gray-200 rounded-xl text-xs font-mono focus:outline-none focus:border-gray-400 resize-none bg-white"></textarea>
+                <input id="act-images" type="file" multiple accept="image/*"
+                  class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 bg-white mb-2" />
+                <div id="act-gallery-preview" class="text-xs text-gray-400 mt-2"></div>
               </div>
 
               <!-- 작성자 -->
@@ -456,21 +457,46 @@
         document.getElementById('edit-activity-id').value = id;
         document.getElementById('act-title').value = item.title || '';
         document.getElementById('act-summary').value = item.summary || '';
-        document.getElementById('act-thumbnail').value = item.thumbnail || '';
-        document.getElementById('act-author').value = item.author || '사무국';
+        document.getElementById('act-author').value = item.author || '관리자';
         document.getElementById('act-published').checked = item.is_published !== false;
         if (item.published_at) {
           document.getElementById('act-date').value = new Date(item.published_at).toISOString().split('T')[0];
         }
-        let imgs = '';
-        if (item.images) {
-          if (Array.isArray(item.images)) imgs = item.images.join('\n');
-          else { try { imgs = JSON.parse(item.images).join('\n'); } catch { imgs = item.images; } }
-        }
-        document.getElementById('act-images').value = imgs;
+
+        // 기존 대표 이미지 표시
         if (item.thumbnail) {
+          document.getElementById('act-thumbnail-url').value = item.thumbnail;
           document.getElementById('act-thumb-img').src = item.thumbnail;
           document.getElementById('act-thumb-preview').classList.remove('hidden');
+        }
+
+        // 기존 갤러리 이미지 저장 및 표시
+        let existingImages = [];
+        if (item.images) {
+          if (Array.isArray(item.images)) existingImages = item.images;
+          else { try { existingImages = JSON.parse(item.images); } catch { existingImages = []; } }
+        }
+        window.currentImages = existingImages;
+
+        // 기존 이미지 미리보기 표시
+        const preview = document.getElementById('act-gallery-preview');
+        preview.innerHTML = '';
+        existingImages.forEach((src, idx) => {
+          const div = document.createElement('div');
+          div.className = 'relative rounded-lg overflow-hidden h-20 bg-gray-100 inline-block mr-2 mb-2';
+          div.innerHTML = `
+            <img src="${src}" alt="기존 이미지" class="w-full h-full object-cover" />
+            <button type="button" onclick="window.currentImages.splice(${idx}, 1); this.parentElement.remove();"
+              class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600">×</button>
+          `;
+          preview.appendChild(div);
+        });
+
+        if (existingImages.length > 0) {
+          const info = document.createElement('div');
+          info.className = 'text-gray-400 text-xs mt-2 block';
+          info.textContent = `기존 이미지: ${existingImages.length}장 (×버튼으로 삭제, 새 파일로 추가 가능)`;
+          preview.appendChild(info);
         }
         document.getElementById('activity-write-title').textContent = '게시물 수정';
         document.getElementById('act-submit-label').textContent = '수정 저장';
@@ -505,26 +531,44 @@
       }
     });
 
+    // 이미지 압축 함수
+    async function compressImage(file) {
+      try {
+        const options = {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 1280,
+          useWebWorker: true
+        };
+        const compressed = await imageCompression(file, options);
+        return compressed;
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    // 이미지 업로드 함수
+    async function uploadImage(file) {
+      const fileName = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}.jpg`;
+
+      const { error } = await window.supabaseClient.storage
+        .from('activity-images')
+        .upload(fileName, file);
+
+      if (error) {
+        throw error;
+      }
+
+      const { data } = window.supabaseClient.storage
+        .from('activity-images')
+        .getPublicUrl(fileName);
+
+      return data.publicUrl;
+    }
+
     // ═══ ACTIVITIES: 저장 ═══
     document.getElementById('act-submit-btn').addEventListener('click', async () => {
       const title = document.getElementById('act-title').value.trim();
       if (!title) { showToast('제목을 입력해주세요.', 'error'); return; }
-
-      const imgsRaw = document.getElementById('act-images').value.trim();
-      const images = imgsRaw ? imgsRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
-      const pubDateV = document.getElementById('act-date').value;
-      const pubDate = pubDateV ? new Date(pubDateV).toISOString() : new Date().toISOString();
-
-      const payload = {
-        title,
-        summary: document.getElementById('act-summary').value.trim(),
-        content: activityQuill ? activityQuill.root.innerHTML : '',
-        thumbnail: document.getElementById('act-thumbnail').value.trim(),
-        images,
-        author: document.getElementById('act-author').value.trim() || '사무국',
-        published_at: pubDate,
-        is_published: document.getElementById('act-published').checked,
-      };
 
       const btn = document.getElementById('act-submit-btn');
       btn.disabled = true;
@@ -532,6 +576,44 @@
 
       try {
         if (!window.supabaseClient) throw new Error('DB 미연결');
+
+        // 대표 이미지 업로드
+        let thumbnail = document.getElementById('act-thumbnail-url').value || '';
+        const thumbFile = document.getElementById('act-thumbnail').files[0];
+        if (thumbFile) {
+          const compressed = await compressImage(thumbFile);
+          thumbnail = await uploadImage(compressed);
+        }
+
+        // 갤러리 이미지 업로드 (수정 모드일 때 기존 이미지 유지)
+        let images = editingActivityId ?
+          (Array.isArray(window.currentImages) ? window.currentImages : []) : [];
+
+        const imageFiles = document.getElementById('act-images').files;
+        if (imageFiles && imageFiles.length > 0) {
+          if (imageFiles.length > 5) {
+            throw new Error('최대 5장까지만 업로드 가능합니다');
+          }
+          for (let file of imageFiles) {
+            const compressed = await compressImage(file);
+            const url = await uploadImage(compressed);
+            images.push(url);
+          }
+        }
+
+        const pubDateV = document.getElementById('act-date').value;
+        const pubDate = pubDateV ? new Date(pubDateV).toISOString() : new Date().toISOString();
+
+        const payload = {
+          title,
+          summary: document.getElementById('act-summary').value.trim(),
+          content: activityQuill ? activityQuill.root.innerHTML : '',
+          thumbnail,
+          images,
+          author: document.getElementById('act-author').value.trim() || '관리자',
+          published_at: pubDate,
+          is_published: document.getElementById('act-published').checked,
+        };
 
         let dbError;
         if (editingActivityId) {
@@ -565,7 +647,7 @@
       ['act-title', 'act-summary', 'act-thumbnail', 'act-images'].forEach(id =>
         document.getElementById(id).value = ''
       );
-      document.getElementById('act-author').value = '사무국';
+      document.getElementById('act-author').value = '관리자';
       document.getElementById('act-published').checked = true;
       document.getElementById('act-date').value = new Date().toISOString().split('T')[0];
       document.getElementById('act-thumb-preview').classList.add('hidden');

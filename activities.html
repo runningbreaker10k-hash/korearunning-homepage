@@ -116,6 +116,7 @@
           <div class="relative h-48 overflow-hidden bg-gray-100">
             <img src="${item.thumbnail||'https://images.unsplash.com/photo-1513593771513-7b58b6c4af38?w=600&q=80'}"
                  alt="${item.title}"
+                 loading="lazy"
                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                  onerror="this.src='https://images.unsplash.com/photo-1513593771513-7b58b6c4af38?w=600&q=80'" />
             <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
