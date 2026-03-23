@@ -1,7 +1,7 @@
 /* ==========================================
    전국러닝협회 — 공통 스타일
    베이스: White / Dark Gray
-   포인트: Red (#c0392b)
+   포인트: Blue (#2563eb)
    ========================================== */
 
 * { box-sizing: border-box; }
@@ -28,8 +28,8 @@ body {
   box-shadow: 0 2px 16px rgba(0,0,0,0.08);
 }
 .nav-link.active {
-  color: #c0392b;
-  border-bottom-color: #c0392b !important;
+  color: #2563eb;
+  border-bottom-color: #2563eb !important;
 }
 
 /* ── 히어로 슬라이더 ──────────────────── */
@@ -62,12 +62,12 @@ body {
 /* ── 섹션 구분선 (레드 포인트) ─────────── */
 .section-divider {
   width: 36px; height: 3px;
-  background: #c0392b; border-radius: 2px;
+  background: #2563eb; border-radius: 2px;
   margin-top: 10px;
 }
 .section-divider-center {
   width: 36px; height: 3px;
-  background: #c0392b; border-radius: 2px;
+  background: #2563eb; border-radius: 2px;
   margin: 10px auto 0;
 }
 
@@ -90,9 +90,9 @@ body {
 .timeline-item::before {
   content: ''; position: absolute; left: 0.55rem; top: 0.3rem;
   width: 10px; height: 10px;
-  background: #c0392b; border-radius: 50%;
+  background: #2563eb; border-radius: 50%;
   border: 2px solid #fff;
-  box-shadow: 0 0 0 2px #c0392b;
+  box-shadow: 0 0 0 2px #2563eb;
 }
 .timeline-item::after {
   content: ''; position: absolute; left: 0.98rem; top: 1.2rem; bottom: -0.5rem;
@@ -111,7 +111,7 @@ body {
 .spinner {
   width: 28px; height: 28px;
   border: 3px solid #e5e7eb;
-  border-top-color: #c0392b;
+  border-top-color: #2563eb;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -130,7 +130,7 @@ body {
 }
 .toast.show  { transform: translateY(0); opacity: 1; }
 .toast.success { background: #166534; }
-.toast.error   { background: #c0392b; }
+.toast.error   { background: #ef4444; }
 
 /* ── Quill 에디터 ─────────────────────── */
 .ql-container        { min-height: 300px; font-family: 'Noto Sans KR', sans-serif; font-size: 14px; }
@@ -146,7 +146,7 @@ body {
 .prose-content li { margin: 0.35rem 0; color: #4b5563; line-height: 1.75; }
 .prose-content strong { color: #111; }
 .prose-content blockquote {
-  border-left: 3px solid #c0392b; padding-left: 1rem;
+  border-left: 3px solid #2563eb; padding-left: 1rem;
   color: #6b7280; font-style: italic; margin: 1rem 0;
 }
 .prose-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
@@ -175,7 +175,7 @@ body {
 }
 
 /* ── 통계 숫자 ────────────────────────── */
-.stat-number { color: #c0392b; }
+.stat-number { color: #2563eb; }
 
 /* ── 스크롤 탑 ────────────────────────── */
 #scroll-top { transition: opacity 0.3s, transform 0.3s; }

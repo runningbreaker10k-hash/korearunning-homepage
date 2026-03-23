@@ -8,6 +8,14 @@
   <title>관리자 - 전국러닝협회</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Supabase 초기화 (라이브러리 로드 후 즉시)
+    window.supabaseClient = supabase.createClient(
+      'https://ihcyoqfjnvvtoxtyhrhd.supabase.co',
+      'sb_publishable_NXunyAEKeeEdLHwZJNZXLA_j2MrnWoZ'
+    );
+    console.log('✓ Supabase 초기화됨');
+  </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet" />
@@ -18,7 +26,7 @@
     tailwind.config = {
       theme: {
         extend: {
-          colors: { primary: '#c0392b', 'primary-dark': '#922b21' },
+          colors: { primary: '#2563eb', 'primary-dark': '#1e40af' },
           fontFamily: { sans: ['Noto Sans KR', 'sans-serif'] }
         }
       }
@@ -32,9 +40,9 @@
   <div id="login-page" class="min-h-screen flex items-center justify-center bg-gray-900 p-4">
     <div class="w-full max-w-sm">
       <!-- 로고 -->
-      <div class="text-center mb-8">
-        <h1 class="text-xl font-black text-white">전국러닝협회</h1>
-        <p class="text-gray-500 text-sm mt-1">관리자 로그인</p>
+      <div class="text-center mb-8 flex flex-col items-center justify-center">
+        <img src="images/logo.png" alt="전국러닝협회" class="h-8 max-w-[200px] mb-3 brightness-0 invert opacity-90" />
+        <p class="text-gray-500 text-sm mt-2">관리자 로그인</p>
       </div>
       <!-- 로그인 카드 -->
       <div class="bg-white rounded-2xl shadow-xl p-8">
@@ -228,7 +236,10 @@
             <div class="space-y-5">
               <!-- 대표 이미지 -->
               <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">대표 이미지 URL</label>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                  대표 이미지 URL
+                  <span class="text-gray-400 font-normal text-[10px] normal-case ml-1">(선택)</span>
+                </label>
                 <input id="act-thumbnail" type="url" placeholder="https://..."
                   class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 bg-white mb-2" />
                 <div id="act-thumb-preview"
@@ -241,7 +252,7 @@
               <div>
                 <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
                   갤러리 이미지 URL
-                  <span class="text-gray-400 font-normal text-[10px] normal-case ml-1">(한 줄에 하나씩)</span>
+                  <span class="text-gray-400 font-normal text-[10px] normal-case ml-1">(선택, 한 줄에 하나씩)</span>
                 </label>
                 <textarea id="act-images" rows="4"
                   placeholder="https://example.com/img1.jpg&#10;https://example.com/img2.jpg"
@@ -251,7 +262,7 @@
               <!-- 작성자 -->
               <div>
                 <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">작성자</label>
-                <input id="act-author" type="text" value="사무국"
+                <input id="act-author" type="text" value="관리자"
                   class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-400 bg-white" />
               </div>
 
@@ -298,7 +309,7 @@
     <span id="toast-msg"></span>
   </div>
 
-  <script src="js/main.js?v=2"></script>
+  <script src="js/main.js?v=3"></script>
   <script>
     // ═══ AUTH ═══
     const ADMIN_ID = 'admin', ADMIN_PW = 'admin123';
@@ -358,7 +369,12 @@
     // ═══ ACTIVITIES: 목록 로드 ═══
     async function loadActivities() {
       try {
-        const { data: dbData, error } = await supabaseClient.from('activities').select('*').limit(200);
+        if (!window.supabaseClient) {
+          document.getElementById('activities-tbody').innerHTML =
+            '<tr><td colspan="5" class="px-5 py-8 text-center text-red-400 text-sm">DB 연결 실패</td></tr>';
+          return;
+        }
+        const { data: dbData, error } = await window.supabaseClient.from('activities').select('*').limit(200);
         if (error) throw error;
         const items = (dbData || []).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         const tbody = document.getElementById('activities-tbody');
@@ -433,7 +449,8 @@
     // ═══ ACTIVITIES: 수정 ═══
     async function editActivity(id) {
       try {
-        const { data: item, error } = await supabaseClient.from('activities').select('*').eq('id', id).single();
+        if (!window.supabaseClient) throw new Error('DB 미연결');
+        const { data: item, error } = await window.supabaseClient.from('activities').select('*').eq('id', id).single();
         if (error) throw error;
         editingActivityId = id;
         document.getElementById('edit-activity-id').value = id;
@@ -466,7 +483,8 @@
     async function deleteActivity(id, title) {
       if (!confirm(`"${title}" 게시물을 삭제하시겠습니까?`)) return;
       try {
-        const { error } = await supabaseClient.from('activities').delete().eq('id', id);
+        if (!window.supabaseClient) throw new Error('DB 미연결');
+        const { error } = await window.supabaseClient.from('activities').delete().eq('id', id);
         if (error) throw error;
         showToast('삭제되었습니다.', 'success');
         loadActivities();
@@ -513,12 +531,14 @@
       btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> 저장 중...';
 
       try {
+        if (!window.supabaseClient) throw new Error('DB 미연결');
+
         let dbError;
         if (editingActivityId) {
-          const { error } = await supabaseClient.from('activities').update(payload).eq('id', editingActivityId);
+          const { error } = await window.supabaseClient.from('activities').update(payload).eq('id', editingActivityId);
           dbError = error;
         } else {
-          const { error } = await supabaseClient.from('activities').insert([payload]);
+          const { error } = await window.supabaseClient.from('activities').insert([payload]);
           dbError = error;
         }
         if (!dbError) {

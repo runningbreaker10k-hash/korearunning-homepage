@@ -5,8 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="ZmbT5zLPERNwony2TTn10lYGeiKOoN6SdVP7soehA80" />
-  <meta name="naver-site-verification" content="26d6dc807e86f60ae822528f9d3d1086d5901803" />
-  <title>전국러닝협회 (KNRA) - 대한민국 러닝의 중심</title>
+  <meta name="naver-site-verification" content="a825cb0fd7a445091077b0300c443cfb1edf8c28" />
+
+  <title>전국러닝협회 - 대한민국 러닝의 중심</title>
   <meta name="description" content="전국러닝협회는 대한민국 러닝 문화의 발전과 건강한 커뮤니티 형성을 위해 헌신합니다." />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -18,10 +19,7 @@
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            primary: '#c0392b',
-            'primary-dark': '#922b21',
-          },
+          colors: { primary: '#2563eb', 'primary-dark': '#1e40af' },
           fontFamily: { sans: ['Noto Sans KR', 'sans-serif'] }
         }
       }
@@ -41,7 +39,7 @@
       <div class="hero-slide active absolute inset-0 bg-cover bg-center"
         style="background-image:url('https://images.unsplash.com/photo-1513593771513-7b58b6c4af38?w=1800&q=85')"></div>
       <div class="hero-slide absolute inset-0 bg-cover bg-center opacity-0"
-        style="background-image:url('https://plus.unsplash.com/premium_photo-1661293833437-47e8ec0719a0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
+        style="background-image:url('https://images.pexels.com/photos/2526878/pexels-photo-2526878.jpeg')">
       </div>
       <div class="hero-slide absolute inset-0 bg-cover bg-center opacity-0"
         style="background-image:url('https://images.unsplash.com/photo-1716573094354-e4c3226ba887?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
@@ -94,15 +92,15 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-0 text-center">
         <div
           class="stat-item px-4 py-4 border-r border-white/10 last:border-r-0 sm:last:border-r-0 [&:nth-child(2)]:border-r-0 md:[&:nth-child(2)]:border-r">
-          <div class="text-3xl sm:text-4xl font-black text-primary mb-1" data-count="8500">0</div>
-          <div class="text-gray-400 text-xs sm:text-sm font-medium">전국 회원 수</div>
+          <div class="text-3xl sm:text-4xl font-black text-primary mb-1" data-count="400">0</div>
+          <div class="text-gray-400 text-xs sm:text-sm font-medium">전국 협회원 수</div>
         </div>
         <div class="stat-item px-4 py-4 border-r border-white/10 last:border-r-0 md:[&:nth-child(2)]:border-r">
-          <div class="text-3xl sm:text-4xl font-black text-primary mb-1" data-count="120">0</div>
+          <div class="text-3xl sm:text-4xl font-black text-primary mb-1" data-count="26">0</div>
           <div class="text-gray-400 text-xs sm:text-sm font-medium">협력 러닝 크루</div>
         </div>
         <div class="stat-item px-4 py-4 border-r border-white/10 last:border-r-0 border-t md:border-t-0">
-          <div class="text-3xl sm:text-4xl font-black text-primary mb-1" data-count="32">0</div>
+          <div class="text-3xl sm:text-4xl font-black text-primary mb-1" data-count="16">0</div>
           <div class="text-gray-400 text-xs sm:text-sm font-medium">연간 대회 수</div>
         </div>
         <div class="stat-item px-4 py-4 border-t md:border-t-0">
@@ -172,7 +170,7 @@
   <!-- =========== FOOTER =========== -->
   <div id="footer-placeholder"></div>
 
-  <script src="js/main.js?v=2"></script>
+  <script src="js/main.js?v=4"></script>
   <script>
     // ─── Hero Slider ───
     let cur = 0;
@@ -222,7 +220,7 @@
         }
         el.innerHTML = items.map(item => `
           <article class="activity-card group bg-white rounded-xl overflow-hidden border border-gray-100 cursor-pointer"
-                   onclick="location.href='activity-detail.html?id=${item.id}'">
+                   onclick="location.href='activity-detail?id=${item.id}'">
             <div class="relative h-48 overflow-hidden bg-gray-100">
               <img src="${item.thumbnail || 'https://images.unsplash.com/photo-1513593771513-7b58b6c4af38?w=600&q=80'}"
                    alt="${item.title}"

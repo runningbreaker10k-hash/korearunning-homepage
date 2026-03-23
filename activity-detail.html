@@ -13,7 +13,7 @@
     tailwind.config = {
       theme: {
         extend: {
-          colors: { primary: '#c0392b', 'primary-dark': '#922b21' },
+          colors: { primary: '#2563eb', 'primary-dark': '#1e40af' },
           fontFamily: { sans: ['Noto Sans KR', 'sans-serif'] }
         }
       }
@@ -112,19 +112,36 @@
   <!-- FOOTER -->
   <div id="footer-placeholder"></div>
 
-  <script src="js/main.js?v=2"></script>
+  <script src="js/main.js?v=6"></script>
   <script>
     const id = new URLSearchParams(location.search).get('id');
     let galleryImages = [];
     let lbIdx = 0;
 
     async function loadDetail() {
-      if (!id) { showError(); return; }
+      if (!id) {
+        showError();
+        return;
+      }
+
       try {
+        if (!supabaseClient) {
+          throw new Error('Supabase 클라이언트 없음');
+        }
+
         const { data: item, error } = await supabaseClient.from('activities').select('*').eq('id', id).single();
-        if (error || !item) throw error || new Error('Not found');
+
+        if (error) {
+          throw error;
+        }
+        if (!item) {
+          throw new Error('게시물을 찾을 수 없습니다');
+        }
+
         renderDetail(item);
-      } catch(e) { showError(); }
+      } catch(e) {
+        showError();
+      }
     }
 
     function renderDetail(item) {
@@ -224,6 +241,7 @@
     });
 
     // ─── 공통 ───
+    // 공통
     loadDetail();
   </script>
 </body>

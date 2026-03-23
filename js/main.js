@@ -1,6 +1,7 @@
 /* main.js - 공통 유틸리티 */
 const SUPABASE_URL = 'https://ihcyoqfjnvvtoxtyhrhd.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_NXunyAEKeeEdLHwZJNZXLA_j2MrnWoZ';
+
 window.supabaseClient = typeof window !== 'undefined' && window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 function formatDate(dateStr) {

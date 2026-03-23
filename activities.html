@@ -13,7 +13,7 @@
     tailwind.config = {
       theme: {
         extend: {
-          colors: { primary: '#c0392b', 'primary-dark': '#922b21' },
+          colors: { primary: '#2563eb', 'primary-dark': '#1e40af' },
           fontFamily: { sans: ['Noto Sans KR', 'sans-serif'] }
         }
       }
@@ -75,7 +75,7 @@
   <!-- FOOTER -->
   <div id="footer-placeholder"></div>
 
-  <script src="js/main.js?v=2"></script>
+  <script src="js/main.js?v=6"></script>
   <script>
     const PAGE_SIZE = 9;
     let allItems = [], filtered = [], displayed = 0;
@@ -108,10 +108,10 @@
         return;
       }
       const chunk = filtered.slice(displayed, displayed + PAGE_SIZE);
-      chunk.forEach(item => {
+      chunk.forEach((item, idx) => {
         const card = document.createElement('article');
         card.className = 'activity-card group bg-white rounded-xl overflow-hidden border border-gray-100 cursor-pointer';
-        card.onclick = () => location.href = `activity-detail.html?id=${item.id}`;
+        card.id = `card-${item.id}`; // 디버깅용 ID
         card.innerHTML = `
           <div class="relative h-48 overflow-hidden bg-gray-100">
             <img src="${item.thumbnail||'https://images.unsplash.com/photo-1513593771513-7b58b6c4af38?w=600&q=80'}"
@@ -130,6 +130,16 @@
             </div>
           </div>`;
         grid.appendChild(card);
+
+        // 클릭 이벤트는 appendChild 후에 바인딩
+        const clickHandler = (e) => {
+          e.stopPropagation();
+          const targetUrl = `activity-detail?id=${item.id}`;
+          window.location.href = targetUrl;
+        };
+
+        card.onclick = clickHandler;
+        card.addEventListener('click', clickHandler);
       });
       displayed += chunk.length;
       document.getElementById('total-count').textContent = `총 ${filtered.length}건의 활동 소식`;
