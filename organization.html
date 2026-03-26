@@ -22,8 +22,118 @@
     }
   </script>
   <style>
-    .org-line-v  { display:none; }
-    .org-line-h  { display:none; }
+    #modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    #modal.active {
+      display: flex;
+    }
+
+    #modalImageContainer {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #modalImage {
+      max-width: 100%;
+      max-height: 100%;
+      cursor: grab;
+      transition: transform 0.2s ease-out;
+      user-select: none;
+    }
+
+    #modalImage:active {
+      cursor: grabbing;
+    }
+
+    .modal-controls {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 50px;
+      padding: 15px 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .modal-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 16px;
+    }
+
+    .modal-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+
+    .modal-btn:active {
+      transform: scale(0.95);
+    }
+
+    .zoom-display {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 10;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 20px;
+      z-index: 10;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
   </style>
 </head>
 <body class="font-sans bg-white text-gray-900 antialiased">
@@ -44,245 +154,20 @@
     </div>
   </section>
 
-  <!-- MAIN -->
+  <!-- MAIN: 이미지만 표시 -->
   <main class="bg-gray-50">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
 
-      <!-- ── 본부 조직도 섹션 헤더 ── -->
-      <div class="text-center mb-12">
-        <p class="text-primary text-xs font-bold tracking-widest uppercase mb-3">Organization Chart</p>
-        <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-3">본부 조직도</h2>
-        <div class="section-divider-center mb-2"></div>
-        <p class="text-xs text-gray-400 tracking-widest font-semibold uppercase mt-4">Korea National Running Association</p>
-        <!-- pages API 동적 안내문구 -->
-        <div id="org-intro-content" class="hidden mt-4 max-w-xl mx-auto text-sm text-gray-500 leading-relaxed prose-content"></div>
-      </div>
-
-      <!-- ── 본부 차트 ── -->
-      <div class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-10 mb-6 shadow-sm overflow-x-auto">
-
-        <!-- 자문단 + 회장 + 자문단 (3열) -->
-        <div class="grid grid-cols-3 gap-4 items-start min-w-[560px]">
-
-          <!-- 왼쪽 자문 -->
-          <div class="space-y-3 pt-2">
-            <div class="border border-gray-200 rounded-xl p-4 text-center bg-gray-50">
-              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">법무자문</p>
-              <p class="text-[10px] text-gray-400 mb-1.5">법무법인 지석 변호사</p>
-              <p class="font-black text-gray-800 text-sm">윤철민</p>
-            </div>
-            <div class="border border-gray-200 rounded-xl p-4 text-center bg-gray-50">
-              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">의료자문</p>
-              <p class="text-[10px] text-gray-400 mb-1.5">중앙병원 재활의학과 과장</p>
-              <p class="font-black text-gray-800 text-sm">이상숙</p>
-            </div>
-          </div>
-
-          <!-- 가운데 회장 → 사무총장 -->
-          <div class="flex flex-col items-center gap-3">
-            <!-- 회장 -->
-            <div class="bg-gray-900 text-white rounded-xl px-6 py-5 text-center w-full shadow-md">
-              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">회 장</p>
-              <p class="font-black text-xl">이중범</p>
-            </div>
-            <!-- 사무총장 -->
-            <div class="bg-primary text-white rounded-xl px-6 py-5 text-center w-full shadow-md">
-              <p class="text-[10px] font-bold text-blue-200 uppercase tracking-widest mb-1.5">사무총장</p>
-              <p class="font-black text-xl">윤세준</p>
-            </div>
-          </div>
-
-          <!-- 오른쪽 자문 -->
-          <div class="space-y-3 pt-2">
-            <div class="border border-gray-200 rounded-xl p-4 text-center bg-gray-50">
-              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">스포츠자문 · 기자</p>
-              <p class="font-black text-gray-800 text-sm">김경무</p>
-            </div>
-            <div class="border border-gray-200 rounded-xl p-4 text-center bg-gray-50">
-              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">재무자문 · 회계사</p>
-              <p class="font-black text-gray-800 text-sm">김형철</p>
-            </div>
-            <div class="border border-gray-200 rounded-xl p-4 text-center bg-gray-50">
-              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">IT자문</p>
-              <p class="font-black text-gray-800 text-sm">민경진</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- 부회장 4명 -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 min-w-[560px] mt-4">
-          <div>
-            <div class="border-2 border-gray-900 rounded-xl p-4 text-center w-full">
-              <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">부회장 · 대회운영</p>
-              <p class="font-black text-gray-900">정성완</p>
-            </div>
-          </div>
-          <div>
-            <div class="border-2 border-gray-900 rounded-xl p-4 text-center w-full">
-              <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">부회장 · 홍보마케팅</p>
-              <p class="font-black text-gray-900">박지흠</p>
-            </div>
-          </div>
-          <div>
-            <div class="border-2 border-gray-900 rounded-xl p-4 text-center w-full">
-              <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">부회장 · 데이터관리</p>
-              <p class="font-black text-gray-900">권수정</p>
-            </div>
-          </div>
-          <div>
-            <div class="border-2 border-gray-900 rounded-xl p-4 text-center w-full">
-              <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">부회장 · 재무</p>
-              <p class="font-black text-gray-900">위다영</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- 팀장 6명 -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 min-w-[560px] mt-4">
-          <div class="border border-gray-200 rounded-xl p-3 text-center bg-gray-50">
-            <p class="text-[10px] font-bold text-gray-400 mb-1.5">운영팀장</p>
-            <p class="font-bold text-gray-800 text-sm">이재민</p>
-          </div>
-          <div class="border border-gray-200 rounded-xl p-3 text-center bg-gray-50">
-            <p class="text-[10px] font-bold text-gray-400 mb-1.5">안전팀장</p>
-            <p class="font-bold text-gray-800 text-sm">변명문</p>
-          </div>
-          <div class="border border-gray-200 rounded-xl p-3 text-center bg-gray-50">
-            <p class="text-[10px] font-bold text-gray-400 mb-1.5">홍보팀장</p>
-            <p class="font-bold text-gray-800 text-sm">정지민</p>
-          </div>
-          <div class="border border-gray-200 rounded-xl p-3 text-center bg-gray-50">
-            <p class="text-[10px] font-bold text-gray-400 mb-1.5">협찬팀장</p>
-            <p class="font-bold text-gray-800 text-sm">손미영</p>
-          </div>
-          <div class="border border-gray-200 rounded-xl p-3 text-center bg-gray-50">
-            <p class="text-[10px] font-bold text-gray-400 mb-1.5">정보팀장</p>
-            <p class="font-bold text-gray-800 text-sm">박준영</p>
-          </div>
-          <div class="border border-gray-200 rounded-xl p-3 text-center bg-gray-50">
-            <p class="text-[10px] font-bold text-gray-400 mb-1.5">총무팀장</p>
-            <p class="font-bold text-gray-800 text-sm">윤미경</p>
-          </div>
-        </div>
-
-      </div><!-- /본부 차트 카드 -->
-
-      <!-- ── 지부 조직 ── -->
-      <div class="mt-14">
-        <div class="text-center mb-10">
-          <p class="text-primary text-xs font-bold tracking-widest uppercase mb-3">Regional Branches</p>
-          <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-3">지부 조직</h2>
-          <div class="section-divider-center"></div>
-        </div>
-
-        <!-- 본부 대전 -->
-        <div class="flex flex-col items-center mb-7">
-          <div class="bg-gray-900 text-white rounded-xl px-10 py-5 text-center shadow-md">
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">본 부</p>
-            <p class="font-black text-xl mb-0.5">대 전</p>
-            <p class="text-gray-400 text-xs">회장 · 총괄 · 사무국 소재지</p>
-          </div>
-        </div>
-
-        <!-- 4개 권역 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-
-          <!-- 충청권 -->
-          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm org-card">
-            <div class="bg-gray-900 px-5 py-3 text-center">
-              <p class="text-white font-black text-sm">충청권</p>
-            </div>
-            <div class="p-4 space-y-2">
-              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
-                <span class="text-sm font-semibold text-gray-800">세 종</span>
-                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
-              </div>
-              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
-                <span class="text-sm font-semibold text-gray-800">청 주</span>
-                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
-              </div>
-              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
-                <span class="text-sm font-semibold text-gray-800">아 산</span>
-                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 수도권 -->
-          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm org-card">
-            <div class="bg-gray-800 px-5 py-3 text-center">
-              <p class="text-white font-black text-sm">수도권</p>
-            </div>
-            <div class="p-4 space-y-2">
-              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
-                <span class="text-sm font-semibold text-gray-800">서 울</span>
-                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
-              </div>
-              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
-                <span class="text-sm font-semibold text-gray-800">남양주</span>
-                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
-              </div>
-              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
-                <span class="text-sm font-semibold text-gray-800">고 양</span>
-                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
-              </div>
-              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
-                <span class="text-sm font-semibold text-gray-800">오 산</span>
-                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 영남권 -->
-          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm org-card">
-            <div class="bg-gray-800 px-5 py-3 text-center">
-              <p class="text-white font-black text-sm">영남권</p>
-            </div>
-            <div class="p-4 space-y-2">
-              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
-                <span class="text-sm font-semibold text-gray-800">대 구</span>
-                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
-              </div>
-              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
-                <span class="text-sm font-semibold text-gray-800">부 산</span>
-                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
-              </div>
-              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
-                <span class="text-sm font-semibold text-gray-800">울 산</span>
-                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
-              </div>
-              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
-                <span class="text-sm font-semibold text-gray-800">양 산</span>
-                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 호남권 -->
-          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm org-card">
-            <div class="bg-gray-900 px-5 py-3 text-center">
-              <p class="text-white font-black text-sm">호남권</p>
-            </div>
-            <div class="p-4 space-y-2">
-              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
-                <span class="text-sm font-semibold text-gray-800">광 주</span>
-                <span class="text-xs font-semibold text-primary border border-primary/30 px-2 py-0.5 rounded-full">지부</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- 지부 요약 -->
-        <div class="mt-8 text-center">
-          <p class="text-sm text-gray-400">
-            충청권 <strong class="text-gray-700">3</strong>개 &middot;
-            수도권 <strong class="text-gray-700">4</strong>개 &middot;
-            영남권 <strong class="text-gray-700">4</strong>개 &middot;
-            호남권 <strong class="text-gray-700">1</strong>개 =
-            총 <strong class="text-primary">12개 지부</strong>
-          </p>
-        </div>
+      
+      <!-- 조직도 이미지 -->
+      <div class="flex justify-center">
+        <img
+          id="mainImage"
+          src="images/organization.jpg"
+          alt="전국러닝협회 본부 조직도"
+          class="w-full max-w-4xl h-auto rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
+          loading="lazy"
+        />
       </div>
 
     </div>
@@ -291,24 +176,171 @@
   <!-- FOOTER -->
   <div id="footer-placeholder"></div>
 
+  <!-- 모달: 확대 보기 -->
+  <div id="modal">
+    <button class="close-btn" id="closeBtn">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <div class="zoom-display">
+      <span id="zoomPercent">100</span>%
+    </div>
+
+    <div id="modalImageContainer">
+      <img id="modalImage" src="images/organization.jpg" alt="조직도 확대" />
+    </div>
+
+    <div class="modal-controls">
+      <button class="modal-btn" id="zoomOutBtn" title="축소 (마우스휠 또는 -)">
+        <i class="fas fa-minus"></i>
+      </button>
+      <button class="modal-btn" id="resetBtn" title="초기화 (1:1 또는 더블클릭)">
+        <i class="fas fa-redo"></i>
+      </button>
+      <button class="modal-btn" id="zoomInBtn" title="확대 (마우스휠 또는 +)">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+  </div>
+
   <script src="js/main.js"></script>
   <script>
-    // ─── 공통 컴포넌트 처리 완료됨 ───
+    // ─── 조직도 확대 보기 기능 ───
+    const modal = document.getElementById('modal');
+    const mainImage = document.getElementById('mainImage');
+    const modalImage = document.getElementById('modalImage');
+    const closeBtn = document.getElementById('closeBtn');
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const zoomPercent = document.getElementById('zoomPercent');
+    const modalImageContainer = document.getElementById('modalImageContainer');
 
-    // pages API: 조직도 안내문구
-    async function loadOrgIntro() {
-      try {
-        const res = await fetch('tables/pages?limit=50');
-        const data = await res.json();
-        const page = (data.data||[]).find(p => p.page_key === 'organization');
-        if (page && page.content && page.content.replace(/<[^>]*>/g,'').trim()) {
-          const el = document.getElementById('org-intro-content');
-          el.innerHTML = page.content;
-          el.classList.remove('hidden');
-        }
-      } catch(e) {}
+    let zoom = 1;
+    let panX = 0;
+    let panY = 0;
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+
+    const MIN_ZOOM = 1;
+    const MAX_ZOOM = 4;
+    const ZOOM_STEP = 0.2;
+
+    // 이미지 클릭: 모달 열기
+    mainImage.addEventListener('click', () => {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      resetZoom();
+    });
+
+    // 모달 배경 클릭: 닫기
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // 닫기 버튼
+    closeBtn.addEventListener('click', closeModal);
+
+    // ESC 키로 닫기
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
     }
-    loadOrgIntro();
+
+    // 줌 업데이트
+    function updateZoom() {
+      modalImage.style.transform = `scale(${zoom}) translate(${panX}px, ${panY}px)`;
+      zoomPercent.textContent = Math.round(zoom * 100);
+    }
+
+    // 줌 초기화
+    function resetZoom() {
+      zoom = 1;
+      panX = 0;
+      panY = 0;
+      updateZoom();
+    }
+
+    // 줌인
+    zoomInBtn.addEventListener('click', () => {
+      zoom = Math.min(zoom + ZOOM_STEP, MAX_ZOOM);
+      updateZoom();
+    });
+
+    // 줌아웃
+    zoomOutBtn.addEventListener('click', () => {
+      zoom = Math.max(zoom - ZOOM_STEP, MIN_ZOOM);
+      panX = 0;
+      panY = 0;
+      updateZoom();
+    });
+
+    // 리셋
+    resetBtn.addEventListener('click', resetZoom);
+
+    // 마우스 휠: 확대/축소
+    modalImageContainer.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      if (e.deltaY < 0) {
+        zoom = Math.min(zoom + ZOOM_STEP, MAX_ZOOM);
+      } else {
+        zoom = Math.max(zoom - ZOOM_STEP, MIN_ZOOM);
+        if (zoom === MIN_ZOOM) {
+          panX = 0;
+          panY = 0;
+        }
+      }
+      updateZoom();
+    }, { passive: false });
+
+    // 더블클릭: 리셋
+    modalImage.addEventListener('dblclick', resetZoom);
+
+    // 드래그로 이미지 이동 (확대 상태일 때만)
+    modalImage.addEventListener('mousedown', (e) => {
+      if (zoom > MIN_ZOOM) {
+        isDragging = true;
+        dragStartX = e.clientX - panX;
+        dragStartY = e.clientY - panY;
+      }
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging && zoom > MIN_ZOOM) {
+        panX = e.clientX - dragStartX;
+        panY = e.clientY - dragStartY;
+        updateZoom();
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    // 키보드: +/- 로 줌 조절
+    document.addEventListener('keydown', (e) => {
+      if (!modal.classList.contains('active')) return;
+      if (e.key === '+' || e.key === '=') {
+        zoom = Math.min(zoom + ZOOM_STEP, MAX_ZOOM);
+        updateZoom();
+      } else if (e.key === '-') {
+        zoom = Math.max(zoom - ZOOM_STEP, MIN_ZOOM);
+        if (zoom === MIN_ZOOM) {
+          panX = 0;
+          panY = 0;
+        }
+        updateZoom();
+      }
+    });
   </script>
 </body>
 </html>
