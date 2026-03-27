@@ -7,13 +7,13 @@ window.supabaseClient = typeof window !== 'undefined' && window.supabase ? windo
 function formatDate(dateStr) {
   if (!dateStr) return '';
   const d = new Date(dateStr);
-  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
 }
 
 function formatDateKo(dateStr) {
   if (!dateStr) return '';
   const d = new Date(dateStr);
-  return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;
+  return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
 }
 
 function showToast(message, type = '') {
@@ -27,8 +27,8 @@ function showToast(message, type = '') {
   const icon = type === 'success'
     ? 'fa-check-circle'
     : type === 'error'
-    ? 'fa-exclamation-circle'
-    : 'fa-info-circle';
+      ? 'fa-exclamation-circle'
+      : 'fa-info-circle';
   toast.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 3000);
@@ -62,11 +62,11 @@ function injectMetaTags() {
   if (document.querySelector('meta[name="description"]')) return;
   const metaHTML = `
     <!-- 공통 SEO 태그 (JS로 주입됨) -->
-    <meta name="description" content="전국러닝협회(KNRA) 공식 홈페이지입니다. 대한민국 러닝 문화 발전과 건강한 커뮤니티 형성을 위해 헌신합니다." />
-    <meta name="keywords" content="전국러닝협회, KNRA, 마라톤, 러닝크루, 러닝, 달리기, 러너" />
+    <meta name="description" content="협회 소개 및 조직도, 협회 연혁 및 기부활동, 전국 대회 개최" />
+    <meta name="keywords" content="전국러닝협회, 마라톤, 러닝크루, 러닝, 달리기, 러너" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="전국러닝협회 - 달리는 대한민국, 건강한 미래" />
-    <meta property="og:description" content="전국러닝협회(KNRA) 공식 홈페이지입니다. 대한민국 러닝 문화 발전과 건강한 커뮤니티 형성을 위해 헌신합니다." />
+    <meta property="og:title" content="전국러닝협회, 마라톤, 러닝크루, 러닝, 달리기, 러너" />
+    <meta property="og:description" content="협회 소개 및 조직도, 협회 연혁 및 기부활동, 전국 대회 개최" />
   `;
   document.head.insertAdjacentHTML('beforeend', metaHTML);
 }
@@ -79,7 +79,7 @@ async function loadComponents() {
     ]);
     const headerEl = document.getElementById('header-placeholder');
     if (headerEl) headerEl.outerHTML = await headerRes.text();
-    
+
     const footerEl = document.getElementById('footer-placeholder');
     if (footerEl) footerEl.outerHTML = await footerRes.text();
 
@@ -104,17 +104,17 @@ async function loadComponents() {
     if (mobileBtn && mobileMenu) {
       mobileBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
     }
-    
+
     const mainHeader = document.getElementById('main-header');
     if (mainHeader) {
       mainHeader.classList.toggle('scrolled', window.scrollY > 50);
       window.addEventListener('scroll', () => mainHeader.classList.toggle('scrolled', window.scrollY > 50));
     }
-  } catch(e) { console.error('Failed to load components', e); }
+  } catch (e) { console.error('Failed to load components', e); }
 }
 
-document.addEventListener('DOMContentLoaded', () => { 
+document.addEventListener('DOMContentLoaded', () => {
   injectMetaTags();
-  createScrollToTop(); 
+  createScrollToTop();
   loadComponents();
 });
