@@ -58,18 +58,7 @@ function createScrollToTop() {
   });
 }
 
-function injectMetaTags() {
-  if (document.querySelector('meta[name="description"]')) return;
-  const metaHTML = `
-    <!-- 공통 SEO 태그 (JS로 주입됨) -->
-    <meta name="description" content="협회 소개 및 조직도, 협회 연혁 및 기부활동, 전국 대회 개최" />
-    <meta name="keywords" content="전국러닝협회, 마라톤, 러닝크루, 러닝, 달리기, 러너" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="전국러닝협회, 마라톤, 러닝크루, 러닝, 달리기, 러너" />
-    <meta property="og:description" content="협회 소개 및 조직도, 협회 연혁 및 기부활동, 전국 대회 개최" />
-  `;
-  document.head.insertAdjacentHTML('beforeend', metaHTML);
-}
+
 
 async function loadComponents() {
   try {
@@ -114,7 +103,6 @@ async function loadComponents() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  injectMetaTags();
   createScrollToTop();
   loadComponents();
 });
