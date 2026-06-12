@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -r activity-detail d:/_WORK/260320_korearunning/korearunning_homepage/*.html)"
+      "Bash(grep -r activity-detail d:/_WORK/260320_korearunning/korearunning_homepage/*.html)",
+      "Bash(git fetch *)"
     ]
   }
 }
