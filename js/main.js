@@ -102,7 +102,17 @@ async function loadComponents() {
   } catch (e) { console.error('Failed to load components', e); }
 }
 
+async function loadFavicon() {
+  const link = document.querySelector("link[rel~='icon']");
+  if (!link) return;
+  try {
+    const res = await fetch('favicon_new.ico', { method: 'HEAD' });
+    if (res.ok) link.href = 'favicon_new.ico';
+  } catch (e) {}
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   createScrollToTop();
   loadComponents();
+  loadFavicon();
 });
